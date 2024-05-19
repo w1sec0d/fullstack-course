@@ -22,7 +22,7 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
     activate server
-    server-->>browser: JS File 
+    server-->>browser: JS File with loading notes logic
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
@@ -30,5 +30,5 @@ sequenceDiagram
     server-->>browser: NOTES in JSON format
     deactivate server
 
-    Note right of browser: The browser re-renders the notes
+    Note right of browser: The browser renders the notes adding it to de DOM
 ```
