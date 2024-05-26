@@ -2,13 +2,23 @@ const Header = (props) => {
   return <h1>{props.course}</h1>;
 };
 
+const Part = (props) => {
+  return (
+    <p>
+      {props.title} {props.exerciseNumber}
+    </p>
+  );
+};
+
 const Content = (props) => {
   return (
     <>
       {props.exercises.map((exercise, index) => (
-        <p key={index}>
-          {exercise.title} {exercise.exerciseNumber}
-        </p>
+        <Part
+          title={exercise.title}
+          exerciseNumber={exercise.exerciseNumber}
+          key={index}
+        />
       ))}
     </>
   );
