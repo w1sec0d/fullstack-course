@@ -13,8 +13,17 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [anecdotesVotes, setAnecdotesVotes] = useState(
+    Array(anecdotes.length).fill(0)
+  );
 
-  const handleClick = () => {
+  const handleVoteClick = () => {
+    let newAnecdotesVotes = [...anecdotesVotes];
+    newAnecdotesVotes[selected] += 1;
+    setAnecdotesVotes(newAnecdotesVotes);
+  };
+
+  const handleRandomQuoteClick = () => {
     let newValue = Math.floor(Math.random() * anecdotes.length);
     setSelected(newValue);
   };
@@ -23,8 +32,10 @@ const App = () => {
     <div>
       <div>
         <q>{anecdotes[selected]}</q>
+        <p>Has {anecdotesVotes[selected]} votes</p>
       </div>
-      <button onClick={handleClick}>Random Quote</button>
+      <button onClick={handleVoteClick}>Vote</button>
+      <button onClick={handleRandomQuoteClick}>Random Quote</button>
     </div>
   );
 };
