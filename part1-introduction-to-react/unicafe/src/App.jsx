@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+const StatisticLine = ({ text, value }) => (
+  <p>
+    {text} {value}
+  </p>
+);
+
 const Statistics = ({ good, neutral, bad }) => {
   let total = good + neutral + bad;
 
@@ -10,20 +16,32 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <div>
       {total === 0 && <p>No feedback given</p>}
-      {total >= 0 && (
+      {total > 0 && (
         <>
           <h1>Statistics</h1>
-          <p>Good {good}</p>
-          <p>Neutral {neutral}</p>
-          <p>Bad {bad}</p>
-          <p>All {good + neutral + bad}</p>
-          <p>Average {averageFeedback(good, bad, total).toFixed(2)}</p>
-          <p>Positive {positiveFeedBack(good, total).toFixed(2)} %</p>
+          <StatisticLine text="Good" value={good} />
+          <StatisticLine text="Neutral" value={neutral} />
+          <StatisticLine text="Bad" value={bad} />
+          <StatisticLine text="Total" value={good + neutral + bad} />
+          <StatisticLine
+            text="Average"
+            value={averageFeedback(good, bad, total).toFixed(2)}
+          />
+          <StatisticLine
+            text="Positive"
+            value={positiveFeedBack(good, total).toFixed(2)}
+          />
         </>
       )}
     </div>
   );
 };
+
+const Button = ({ incrementFunction, children }) => (
+  <button onClick={() => incrementFunction((prevValue) => prevValue + 1)}>
+    {children}
+  </button>
+);
 
 const App = () => {
   // save clicks of each button to its own state
@@ -35,15 +53,9 @@ const App = () => {
     <>
       <div>
         <h1>Give Feedback</h1>
-        <button onClick={() => setGood((prevValue) => prevValue + 1)}>
-          Good
-        </button>
-        <button onClick={() => setNeutral((prevValue) => prevValue + 1)}>
-          Neutral
-        </button>
-        <button onClick={() => setBad((prevValue) => prevValue + 1)}>
-          Bad
-        </button>
+        <Button incrementFunction={setGood}>Good</Button>
+        <Button incrementFunction={setNeutral}>Neutral</Button>
+        <Button incrementFunction={setBad}>Bad</Button>
       </div>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
