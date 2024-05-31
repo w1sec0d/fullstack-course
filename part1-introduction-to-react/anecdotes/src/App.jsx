@@ -16,27 +16,42 @@ const App = () => {
   const [anecdotesVotes, setAnecdotesVotes] = useState(
     Array(anecdotes.length).fill(0)
   );
+  const mostVotedAnecdoteIndex = anecdotesVotes.indexOf(
+    Math.max(...anecdotesVotes)
+  );
 
   const handleVoteClick = () => {
+    // Adds a vote to the anecdote
     let newAnecdotesVotes = [...anecdotesVotes];
     newAnecdotesVotes[selected] += 1;
     setAnecdotesVotes(newAnecdotesVotes);
   };
 
   const handleRandomQuoteClick = () => {
+    // Gets a random quote
     let newValue = Math.floor(Math.random() * anecdotes.length);
     setSelected(newValue);
   };
 
   return (
-    <div>
-      <div>
-        <q>{anecdotes[selected]}</q>
-        <p>Has {anecdotesVotes[selected]} votes</p>
-      </div>
-      <button onClick={handleVoteClick}>Vote</button>
-      <button onClick={handleRandomQuoteClick}>Random Quote</button>
-    </div>
+    <>
+      <section>
+        <h1>Anecdote Of The Day</h1>
+        <div>
+          <q>{anecdotes[selected]}</q>
+          <p>Has {anecdotesVotes[selected]} votes</p>
+        </div>
+        <button onClick={handleVoteClick}>Vote</button>
+        <button onClick={handleRandomQuoteClick}>Random Quote</button>
+      </section>
+      <section>
+        <h1>Anecdote With Most Votes</h1>
+        <div>
+          <q>{anecdotes[mostVotedAnecdoteIndex]}</q>
+          <p>Has {anecdotesVotes[mostVotedAnecdoteIndex]} votes</p>
+        </div>
+      </section>
+    </>
   );
 };
 
