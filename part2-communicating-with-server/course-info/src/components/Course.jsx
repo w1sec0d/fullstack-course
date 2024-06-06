@@ -1,3 +1,5 @@
+// This is a separate course component
+
 const Header = ({ children }) => <h1>{children}</h1>;
 
 const Total = ({ totalExercises }) => (
