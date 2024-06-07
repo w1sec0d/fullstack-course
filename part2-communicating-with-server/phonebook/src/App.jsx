@@ -10,7 +10,12 @@ const App = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          setPersons(persons.concat({ name: newName }));
+          if (persons.some((obj) => obj.name == newName)) {
+            window.alert(`${newName} is already added on the notebook!`);
+          } else {
+            setPersons(persons.concat({ name: newName }));
+          }
+          setNewName("");
         }}
       >
         <div>
