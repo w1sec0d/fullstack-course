@@ -15,15 +15,16 @@ const App = () => {
 
   const handleDelete = async (contactId) => {
     if (window.confirm("Are you sure to delete the contact?")) {
-      try {
-        await PhonebookService.deleteContact(contactId).then((res) =>
+      await PhonebookService.deleteContact(contactId)
+        .then((res) =>
           setPeople((previousPeople) =>
             previousPeople.filter((person) => person.id != res.id)
           )
-        );
-      } catch (error) {
-        console.log(error);
-      }
+        )
+        .catch((error) => {
+          window.alert("An error occurred deleting the user. Please try again");
+          console.log(error);
+        });
     }
   };
 
@@ -42,39 +43,48 @@ const App = () => {
           `${newName} is already added on the notebook! Do you want to update its info?`
         )
       ) {
-        try {
-          let response = await PhonebookService.update(contactToUpdate.id, {
-            name: newName,
-            phone: newPhone,
-          }).then((res) =>
+        await PhonebookService.update(contactToUpdate.id, {
+          name: newName,
+          phone: newPhone,
+        })
+          .then((res) =>
             setPeople((previousPeople) =>
               previousPeople.filter((person) => person.id != res.id).concat(res)
             )
-          );
-          setNewName("");
-          setNewPhone("");
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    } else {
-      try {
-        let response = await PhonebookService.create({
-          name: newName,
-          phone: newPhone,
-        });
-        setPeople((previousPeople) => previousPeople.concat(response));
+          )
+          .catch((error) => {
+            window.alert(
+              "An error occurred updating the user. Please try again"
+            );
+            console.error(error);
+          });
         setNewName("");
         setNewPhone("");
-      } catch (error) {
-        console.error(error);
       }
+    } else {
+      await PhonebookService.create({
+        name: newName,
+        phone: newPhone,
+      })
+        .then((response) => {
+          setPeople((previousPeople) => previousPeople.concat(response));
+          setNewName("");
+          setNewPhone("");
+        })
+        .catch((error) => {
+          window.alert("An error occurred creating the user. Please try again");
+          console.error(error);
+        });
     }
   };
 
   useEffect(() => {
-    PhonebookService.getAll().then((res) => setPeople(res));
-    console.log("get all!");
+    PhonebookService.getAll()
+      .then((res) => setPeople(res))
+      .catch((error) => {
+        window.alert("An error occurred fetching users. Please try again");
+        console.error(error);
+      });
   }, []);
 
   const filteredPeople = people.filter((person) =>
