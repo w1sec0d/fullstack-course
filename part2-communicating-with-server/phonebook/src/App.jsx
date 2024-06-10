@@ -4,12 +4,17 @@ import PhonebookService from "./services/phonebook";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import People from "./components/People";
+import Notification from "./components/Notification";
+
+import "./index.css";
 
 const App = () => {
   const [people, setPeople] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationClass, setNotificationClass] = useState("");
 
   // Event handlers, delete and submit
 
@@ -70,6 +75,13 @@ const App = () => {
           setPeople((previousPeople) => previousPeople.concat(response));
           setNewName("");
           setNewPhone("");
+          setNotificationMessage({
+            value: `Added contact ${response.name}`,
+            type: "success",
+          });
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 5000);
         })
         .catch((error) => {
           window.alert("An error occurred creating the user. Please try again");
@@ -94,6 +106,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification
+        message={notificationMessage}
+        className={notificationClass}
+      />
       <Filter filter={filter} setFilter={setFilter} />
       <h2>Add a New Contact</h2>
       <PersonForm
