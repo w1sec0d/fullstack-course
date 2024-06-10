@@ -6,9 +6,19 @@ const getAll = () => {
   return request.then((res) => res.data);
 };
 
+const get = (contactId) => {
+  const request = axios.get(`${baseURL}/${contactId}`);
+  return request.then((res) => res.data);
+};
+
 const create = (newContact) => {
   const request = axios.post(baseURL, newContact);
   return request.then((res) => res.data);
 };
 
-export default { getAll, create };
+const deleteContact = (contactId) => {
+  const request = axios.delete(`${baseURL}/${contactId}`);
+  return request.then((res) => res.data);
+};
+
+export default { create, get, getAll, deleteContact };

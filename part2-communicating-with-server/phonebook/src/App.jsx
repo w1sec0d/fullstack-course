@@ -11,20 +11,34 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
 
+  // Event handlers, delete and submit
+
+  const handleDelete = async (contactId) => {
+    if (window.confirm("Are you sure to delete the contact?")) {
+      try {
+        await PhonebookService.deleteContact(contactId).then((res) =>
+          setPeople((previousPeople) =>
+            previousPeople.filter((person) => person.id != res.id)
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (people.some((obj) => obj.name == newName)) {
       window.alert(`${newName} is already added on the notebook!`);
     } else {
-      let request = await PhonebookService.create({
+      let response = await PhonebookService.create({
         name: newName,
         phone: newPhone,
       });
 
-      if (request) {
-        setPeople((previousPeople) =>
-          previousPeople.concat({ name: newName, phone: newPhone })
-        );
+      if (response) {
+        setPeople((previousPeople) => previousPeople.concat(response));
       }
     }
     setNewName("");
@@ -53,7 +67,7 @@ const App = () => {
         setNewPhone={setNewPhone}
       />
       <h2>Numbers</h2>
-      <People filteredPeople={filteredPeople} />
+      <People filteredPeople={filteredPeople} onDelete={handleDelete} />
     </div>
   );
 };
