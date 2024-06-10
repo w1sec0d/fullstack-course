@@ -29,20 +29,47 @@ const App = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (people.some((obj) => obj.name == newName)) {
-      window.alert(`${newName} is already added on the notebook!`);
-    } else {
-      let response = await PhonebookService.create({
-        name: newName,
-        phone: newPhone,
-      });
 
-      if (response) {
+    if (people.some((obj) => obj.name == newName)) {
+      const contactToUpdate = people.find((obj) => obj.name == newName);
+
+      if (contactToUpdate.phone === newPhone) {
+        window.alert(
+          "The contact is already registered with that phone number!"
+        );
+      } else if (
+        window.confirm(
+          `${newName} is already added on the notebook! Do you want to update its info?`
+        )
+      ) {
+        try {
+          let response = await PhonebookService.update(contactToUpdate.id, {
+            name: newName,
+            phone: newPhone,
+          }).then((res) =>
+            setPeople((previousPeople) =>
+              previousPeople.filter((person) => person.id != res.id).concat(res)
+            )
+          );
+          setNewName("");
+          setNewPhone("");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    } else {
+      try {
+        let response = await PhonebookService.create({
+          name: newName,
+          phone: newPhone,
+        });
         setPeople((previousPeople) => previousPeople.concat(response));
+        setNewName("");
+        setNewPhone("");
+      } catch (error) {
+        console.error(error);
       }
     }
-    setNewName("");
-    setNewPhone("");
   };
 
   useEffect(() => {

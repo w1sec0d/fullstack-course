@@ -1,6 +1,11 @@
 import axios from "axios";
 const baseURL = "http://localhost:3001/contacts";
 
+const create = (newContact) => {
+  const request = axios.post(baseURL, newContact);
+  return request.then((res) => res.data);
+};
+
 const getAll = () => {
   const request = axios.get(baseURL);
   return request.then((res) => res.data);
@@ -11,8 +16,8 @@ const get = (contactId) => {
   return request.then((res) => res.data);
 };
 
-const create = (newContact) => {
-  const request = axios.post(baseURL, newContact);
+const update = (contactId, updatedContact) => {
+  const request = axios.put(`${baseURL}/${contactId}`, updatedContact);
   return request.then((res) => res.data);
 };
 
@@ -21,4 +26,4 @@ const deleteContact = (contactId) => {
   return request.then((res) => res.data);
 };
 
-export default { create, get, getAll, deleteContact };
+export default { create, get, getAll, update, deleteContact };
