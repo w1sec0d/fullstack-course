@@ -53,18 +53,24 @@ const App = () => {
           phone: newPhone,
         })
           .then((res) =>
-            setPeople((previousPeople) =>
-              previousPeople.filter((person) => person.id != res.id).concat(res)
-            )
+            setPeople((previousPeople) => {
+              setNewName("");
+              setNewPhone("");
+              return previousPeople
+                .filter((person) => person.id != res.id)
+                .concat(res);
+            })
           )
           .catch((error) => {
-            window.alert(
-              "An error occurred updating the user. Please try again"
-            );
+            setNotificationMessage({
+              value: `The contact ${newName} has already been removed from the server. Please reload the page`,
+              type: "error",
+            });
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 3000);
             console.error(error);
           });
-        setNewName("");
-        setNewPhone("");
       }
     } else {
       await PhonebookService.create({
@@ -81,7 +87,7 @@ const App = () => {
           });
           setTimeout(() => {
             setNotificationMessage(null);
-          }, 5000);
+          }, 3000);
         })
         .catch((error) => {
           window.alert("An error occurred creating the user. Please try again");
