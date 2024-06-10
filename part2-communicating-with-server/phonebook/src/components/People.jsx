@@ -1,6 +1,6 @@
 const People = ({ filteredPeople }) => {
   return filteredPeople.map((person) => (
-    <p key={person.name}>
+    <p key={person.id ? person.id : person.name}>
       {person.name} {person.phone}
     </p>
   ));

@@ -1,36 +1,44 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import PhonebookService from "./services/phonebook";
 
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import People from "./components/People";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [people, setPeople] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
 
-  const filteredPeople = persons.filter((person) =>
-    person.name.toLowerCase().startsWith(filter.toLowerCase())
-  );
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (persons.some((obj) => obj.name == newName)) {
+    if (people.some((obj) => obj.name == newName)) {
       window.alert(`${newName} is already added on the notebook!`);
     } else {
-      setPersons(persons.concat({ name: newName, phone: newPhone }));
+      let request = await PhonebookService.create({
+        name: newName,
+        phone: newPhone,
+      });
+
+      if (request) {
+        setPeople((previousPeople) =>
+          previousPeople.concat({ name: newName, phone: newPhone })
+        );
+      }
     }
     setNewName("");
     setNewPhone("");
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((res) => setPersons(res.data));
+    PhonebookService.getAll().then((res) => setPeople(res));
+    console.log("get all!");
   }, []);
+
+  const filteredPeople = people.filter((person) =>
+    person.name.toLowerCase().startsWith(filter.toLowerCase())
+  );
 
   return (
     <div>
