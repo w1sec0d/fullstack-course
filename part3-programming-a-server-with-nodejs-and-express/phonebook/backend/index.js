@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
+let morgan = require("morgan");
 app.use(express.json());
+app.use(morgan("tiny"));
 
 const PORT = 3001;
 
