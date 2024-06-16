@@ -2,7 +2,10 @@ const express = require("express");
 const app = express();
 let morgan = require("morgan");
 app.use(express.json());
-app.use(morgan("tiny"));
+
+// Configures morgan logger
+morgan.token("requestBody", (request) => JSON.stringify(request.body));
+app.use(morgan(" :method :url :response-time :requestBody"));
 
 const PORT = 3001;
 
