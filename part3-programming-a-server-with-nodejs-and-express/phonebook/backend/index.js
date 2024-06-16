@@ -31,6 +31,12 @@ let persons = [
 app.post("/api/persons", (request, response) => {
   let person = request.body;
   if (person.name && person.number) {
+    if (persons.find((savedPerson) => savedPerson.name === person.name)) {
+      return response
+        .status(400)
+        .json({ error: "That name already exists on the DB" });
+    }
+
     // Ensures a unique id
     let newId = Math.random();
     while (persons.find((person) => person.id === newId)) {
