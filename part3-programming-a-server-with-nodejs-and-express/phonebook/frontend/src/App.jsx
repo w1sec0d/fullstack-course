@@ -54,7 +54,7 @@ const App = () => {
   const filteredPeople = people.filter((person) =>
     person.name.toLowerCase().startsWith(filter.toLowerCase())
   );
-  console.log("render");
+  console.log(filteredPeople);
 
   return (
     <div>

@@ -6,6 +6,8 @@ app.use(express.json());
 // CORS
 const cors = require("cors");
 app.use(cors());
+// Frontend View
+app.use(express.static("dist"));
 
 // Configures morgan logger
 morgan.token("requestBody", (request) => JSON.stringify(request.body));
