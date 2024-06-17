@@ -1,0 +1,24 @@
+{
+  "contacts": [
+    {
+      "id": "3552",
+      "name": "Carlos Ramírez",
+      "phone": "2929-3319"
+    },
+    {
+      "id": "0b35",
+      "name": "Pancracio Florez",
+      "phone": "2023-013"
+    },
+    {
+      "id": "486d",
+      "name": "Mary Jones",
+      "phone": "102-313-223"
+    },
+    {
+      "name": "Arto Hellas",
+      "phone": "203-234-233",
+      "id": "be94"
+    }
+  ]
+}

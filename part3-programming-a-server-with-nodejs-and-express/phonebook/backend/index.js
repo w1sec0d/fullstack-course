@@ -1,13 +1,17 @@
 const express = require("express");
 const app = express();
+// Morgan logger
 let morgan = require("morgan");
 app.use(express.json());
+// CORS
+const cors = require("cors");
+app.use(cors());
 
 // Configures morgan logger
 morgan.token("requestBody", (request) => JSON.stringify(request.body));
 app.use(morgan(" :method :url :response-time :requestBody"));
 
-const PORT = 3001;
+const PORT = process.env.port || 3001;
 
 let persons = [
   {
