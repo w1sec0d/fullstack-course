@@ -17,7 +17,10 @@ const App = () => {
 
   const fetchContacts = useCallback(() => {
     PhonebookService.getAll()
-      .then((res) => setPeople(res))
+      .then((res) => {
+        console.log(res);
+        return setPeople(res);
+      })
       .catch((error) => {
         window.alert("An error occurred fetching users. Please try again");
         console.error(error);
@@ -51,10 +54,12 @@ const App = () => {
     fetchContacts();
   }, [fetchContacts]);
 
-  const filteredPeople = people.filter((person) =>
-    person.name.toLowerCase().startsWith(filter.toLowerCase())
-  );
-  console.log(filteredPeople);
+  const filteredPeople = people
+    ? people.filter((person) =>
+        person.name.toLowerCase().startsWith(filter.toLowerCase())
+      )
+    : [];
+  console.log(people);
 
   return (
     <div>
