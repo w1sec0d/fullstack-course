@@ -77,16 +77,14 @@ app.get("/info", (request, response) => {
 });
 
 // Delete routes
-
 app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  let initialLength = persons.length;
-  persons = persons.filter((person) => person.id !== id);
-
-  if (persons.length < initialLength) {
-    response.status(204).end();
+  const idToDelete = request.params.id;
+  if (idToDelete) {
+    Person.findByIdAndDelete(idToDelete)
+      .then(() => response.status(204).end())
+      .catch((error) => response.status(404).json({ error: error }));
   } else {
-    response.status(404).end();
+    response.status(400).json({ error: "Bad ID provided" });
   }
 });
 
