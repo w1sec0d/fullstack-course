@@ -31,28 +31,20 @@ mongoose
 
 // Post routes
 app.post("/api/persons", (request, response) => {
-  let person = request.body;
-  if (person.name && person.number) {
-    if (persons.find((savedPerson) => savedPerson.name === person.name)) {
-      return response
-        .status(400)
-        .json({ error: "That name already exists on the DB" });
-    }
-
-    // Ensures a unique id
-    let newId = Math.random();
-    while (persons.find((person) => person.id === newId)) {
-      newId = Math.random();
-    }
-
-    // Adds the new person
-    const newPerson = { id: newId, name: person.name, number: person.number };
-    persons = persons.concat(newPerson);
-
-    response.status(201).json(newPerson);
-  } else {
-    response.status(400).end();
+  if (!request.body.name || !request.body.phone) {
+    return response.status(400).json({ error: "content missing" });
   }
+
+  const person = new Person({
+    name: request.body.name,
+    phone: request.body.phone,
+  });
+  console.log(person);
+
+  person
+    .save()
+    .then((newPerson) => response.status(201).json(newPerson))
+    .catch((error) => response.status(400).json({ error: error.message }));
 });
 
 // Get routes

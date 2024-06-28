@@ -48,7 +48,7 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
       } else {
         await PhonebookService.create({
           name: newName,
-          number: newPhone,
+          phone: newPhone,
         })
           .then((response) => {
             setPeople((previousPeople) => previousPeople.concat(response));
