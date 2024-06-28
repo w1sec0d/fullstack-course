@@ -1,5 +1,7 @@
 // .env variables
 require("dotenv").config();
+const PORT = process.env.port || 3001;
+const URL = process.env.MONGODB_URL;
 // Express
 const express = require("express");
 const app = express();
@@ -12,22 +14,17 @@ const { default: mongoose } = require("mongoose");
 app.use(cors());
 // DB Models
 const Person = require("./models/person");
-
 // Frontend View
 app.use(express.static("dist"));
-
 // Configures morgan logger
 morgan.token("requestBody", (request) => JSON.stringify(request.body));
 app.use(morgan(" :method :url :response-time :requestBody"));
-
-const PORT = process.env.port || 3001;
-const URL = process.env.MONGODB_URL;
 
 // MongoDB Connection
 mongoose
   .connect(URL)
   .then(() => console.log("MongoDB Connected!"))
-  .catch((error) => console.log("Something went wrong. Error:", error));
+  .catch((error) => next(error));
 
 // Post routes
 app.post("/api/persons", (request, response) => {
@@ -44,14 +41,14 @@ app.post("/api/persons", (request, response) => {
   person
     .save()
     .then((newPerson) => response.status(201).json(newPerson))
-    .catch((error) => response.status(400).json({ error: error.message }));
+    .catch((error) => next(error));
 });
 
 // Get routes
 app.get("/api/persons", (request, response) => {
   Person.find({})
     .then((people) => response.json(people))
-    .catch(() => response.status(404).end());
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -64,10 +61,7 @@ app.get("/api/persons/:id", (request, response) => {
         response.status(404).end();
       }
     })
-    .catch((error) => {
-      console.error(error);
-      response.status(400).send({ error: "Bad Formatted Id" });
-    });
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
@@ -79,14 +73,29 @@ app.get("/info", (request, response) => {
 // Delete routes
 app.delete("/api/persons/:id", (request, response) => {
   const idToDelete = request.params.id;
-  if (idToDelete) {
-    Person.findByIdAndDelete(idToDelete)
-      .then(() => response.status(204).end())
-      .catch((error) => response.status(404).json({ error: error }));
-  } else {
-    response.status(400).json({ error: "Bad ID provided" });
-  }
+  Person.findByIdAndDelete(idToDelete)
+    .then((data) => {
+      if (!data) {
+        response.status(400).json({ error: "Bad ID provided" });
+      } else {
+        response.status(204).json({ message: "User deleted successfully!" });
+      }
+    })
+    .catch((error) => next(error));
 });
+
+// Test error handler
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
