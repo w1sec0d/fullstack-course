@@ -65,9 +65,11 @@ app.get("/api/persons/:id", (request, response) => {
 });
 
 app.get("/info", (request, response) => {
-  response.send(
-    `Phonebook has info for ${persons.length} people <br> ${new Date()}`
-  );
+  Person.countDocuments({})
+    .then((count) =>
+      response.send(`Phonebook has info of ${count} people <br> ${new Date()}`)
+    )
+    .catch((error) => next(error));
 });
 
 // Delete routes
