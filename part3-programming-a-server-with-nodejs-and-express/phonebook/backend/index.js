@@ -55,13 +55,19 @@ app.get("/api/persons", (request, response) => {
 });
 
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const requestedPerson = persons.find((person) => person.id === id);
-  if (requestedPerson) {
-    response.json(requestedPerson);
-  } else {
-    response.status(404).end();
-  }
+  const id = request.params.id;
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      response.status(400).send({ error: "Bad Formatted Id" });
+    });
 });
 
 app.get("/info", (request, response) => {
