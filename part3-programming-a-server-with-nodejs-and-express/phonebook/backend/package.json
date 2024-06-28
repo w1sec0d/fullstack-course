@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build-frontend": "cd ../frontend && npm run build && cd ../backend && rm -rf ./dist && cd ../frontend && cp -r ./dist ../backend/",
     "dev": "nodemon index.js"
   },
   "author": "Carlos Ramírez",
