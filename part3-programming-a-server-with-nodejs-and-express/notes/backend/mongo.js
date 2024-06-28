@@ -19,11 +19,6 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model("Note", noteSchema);
 
-const note = new Note({
-  content: "Cali Pachangero",
-  important: false,
-});
-
 Note.find({}).then((result) => {
   result.forEach((note) => {
     console.log(note);

@@ -3,7 +3,7 @@ const People = ({ filteredPeople, onDelete }) => {
     <p key={person.id ? person.id : person.name}>
       {person.name}{" "}
       <span style={{ fontWeight: "bold", marginRight: "5px" }}>
-        {person.number}
+        {person.phone}
       </span>
       <button onClick={() => onDelete(person.id)}>Delete</button>
     </p>
