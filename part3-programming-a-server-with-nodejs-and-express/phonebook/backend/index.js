@@ -72,16 +72,36 @@ app.get("/info", (request, response) => {
 
 // Delete routes
 app.delete("/api/persons/:id", (request, response) => {
-  const idToDelete = request.params.id;
-  Person.findByIdAndDelete(idToDelete)
+  const id = request.params.id;
+  Person.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         response.status(400).json({ error: "Bad ID provided" });
       } else {
-        response.status(204).json({ message: "User deleted successfully!" });
+        response.status(200).json({ message: "User deleted successfully!" });
       }
     })
     .catch((error) => next(error));
+});
+
+// Patch routes
+app.put("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+
+  if (request.body.name && request.body.phone) {
+    Person.findByIdAndUpdate(
+      id,
+      {
+        name: request.body.name,
+        phone: request.body.phone,
+      },
+      { new: true }
+    )
+      .then((res) => response.status(200).json(res))
+      .catch((error) => next(error));
+  } else {
+    response.status(404).json({ error: "Incomplete person info" });
+  }
 });
 
 // Test error handler
