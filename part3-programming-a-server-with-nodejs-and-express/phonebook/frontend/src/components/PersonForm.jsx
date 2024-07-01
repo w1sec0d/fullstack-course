@@ -63,10 +63,11 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
             }, 3000);
           })
           .catch((error) => {
-            window.alert(
-              "An error occurred creating the user. Please try again"
-            );
-            console.error(error);
+            setNotificationMessage({
+              value: error.response.data.error,
+              type: "error",
+            });
+            console.log("errorrrr", error.response.data);
           });
       }
     },

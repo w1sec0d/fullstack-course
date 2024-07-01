@@ -27,7 +27,7 @@ mongoose
   .catch((error) => next(error));
 
 // Post routes
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   if (!request.body.name || !request.body.phone) {
     return response.status(400).json({ error: "content missing" });
   }
@@ -45,13 +45,13 @@ app.post("/api/persons", (request, response) => {
 });
 
 // Get routes
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
   Person.find({})
     .then((people) => response.json(people))
     .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
   Person.findById(id)
     .then((person) => {
@@ -64,7 +64,7 @@ app.get("/api/persons/:id", (request, response) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   Person.countDocuments({})
     .then((count) =>
       response.send(`Phonebook has info of ${count} people <br> ${new Date()}`)
@@ -97,7 +97,7 @@ app.put("/api/persons/:id", (request, response) => {
         name: request.body.name,
         phone: request.body.phone,
       },
-      { new: true }
+      { new: true, runValidators: true, context: "query" }
     )
       .then((res) => response.status(200).json(res))
       .catch((error) => next(error));
@@ -112,6 +112,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);

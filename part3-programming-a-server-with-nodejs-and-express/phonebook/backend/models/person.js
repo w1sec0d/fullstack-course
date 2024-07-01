@@ -11,7 +11,11 @@ mongoose
 
 const personSchema = mongoose.Schema({
   id: String,
-  name: String,
+  name: {
+    type: String,
+    minLength: [3, "The person's name has to be at least 3 characters long"],
+    required: true,
+  },
   phone: String,
 });
 
