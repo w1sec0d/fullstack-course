@@ -1,6 +1,6 @@
 // .env variables
 require("dotenv").config();
-const PORT = process.env.port || 3001;
+const PORT = process.env.PORT || 3001;
 const URL = process.env.MONGODB_URL;
 // Express
 const express = require("express");
