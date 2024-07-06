@@ -1,7 +1,7 @@
-import axios from "axios";
-const baseURL = "/api/persons";
+import axios from 'axios';
+const baseURL = '/api/persons';
 // LOCAL TESTING
-// const baseURL = "http://localhost:3001/api/persons";
+// const baseURL = 'http://localhost:3001/api/persons';
 
 const create = (newContact) => {
   const request = axios.post(baseURL, newContact);

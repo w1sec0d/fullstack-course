@@ -1,9 +1,9 @@
-import { useState, useCallback } from "react";
-import PhonebookService from "../services/phonebook";
+import { useState, useCallback } from 'react';
+import PhonebookService from '../services/phonebook';
 
 const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
-  const [newName, setNewName] = useState("");
-  const [newPhone, setNewPhone] = useState("");
+  const [newName, setNewName] = useState('');
+  const [newPhone, setNewPhone] = useState('');
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -14,7 +14,7 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
 
         if (contactToUpdate.phone === newPhone) {
           window.alert(
-            "The contact is already registered with that phone number!"
+            'The contact is already registered with that phone number!'
           );
         } else if (
           window.confirm(
@@ -27,8 +27,8 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
           })
             .then((res) =>
               setPeople((previousPeople) => {
-                setNewName("");
-                setNewPhone("");
+                setNewName('');
+                setNewPhone('');
                 return previousPeople
                   .filter((person) => person.id != res.id)
                   .concat(res);
@@ -37,7 +37,7 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
             .catch((error) => {
               setNotificationMessage({
                 value: `The contact ${newName} has already been removed from the server. Please reload the page`,
-                type: "error",
+                type: 'error',
               });
               setTimeout(() => {
                 setNotificationMessage(null);
@@ -52,11 +52,11 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
         })
           .then((response) => {
             setPeople((previousPeople) => previousPeople.concat(response));
-            setNewName("");
-            setNewPhone("");
+            setNewName('');
+            setNewPhone('');
             setNotificationMessage({
               value: `Added contact ${response.name}`,
-              type: "success",
+              type: 'success',
             });
             setTimeout(() => {
               setNotificationMessage(null);
@@ -65,9 +65,9 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
           .catch((error) => {
             setNotificationMessage({
               value: error.response.data.error,
-              type: "error",
+              type: 'error',
             });
-            console.log("errorrrr", error.response.data);
+            console.log('errorrrr', error.response.data);
           });
       }
     },
@@ -77,21 +77,21 @@ const PersonForm = ({ setNotificationMessage, people, setPeople }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        name:{" "}
+        name:{' '}
         <input
           value={newName}
           onChange={(event) => setNewName(event.target.value)}
         />
       </div>
       <div>
-        number:{" "}
+        number:{' '}
         <input
           value={newPhone}
           onChange={(event) => setNewPhone(event.target.value)}
         />
       </div>
       <div>
-        <button type="submit">add</button>
+        <button type='submit'>add</button>
       </div>
     </form>
   );
