@@ -25,6 +25,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "supertest": "^7.0.0"
   }
 }
