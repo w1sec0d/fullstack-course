@@ -1,4 +1,5 @@
-const { test, describe } = require("node:test");
+const { test, describe, after } = require("node:test");
+const mongoose = require('mongoose')
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
 
@@ -155,3 +156,5 @@ describe("favorite blog", () => {
     });
   });
 });
+
+after()
