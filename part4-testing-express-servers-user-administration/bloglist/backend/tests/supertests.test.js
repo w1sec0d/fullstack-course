@@ -29,6 +29,18 @@ describe("MongoDB Tests", () => {
     const response = await api.get("/api/blogs");
     assert.strictEqual(response.body.length, helper.initialBlogs.length);
   });
+  test("Blog Schema returns id field instead of _id", async () => {
+    const response = await api.get("/api/blogs");
+    console.log(response.body.map((blog) => blog.id !== undefined));
+    const idField = response.body.reduce((prev, blog) => {
+      if (!prev) {
+        return false;
+      } else {
+        return blog.id !== undefined;
+      }
+    });
+    assert.strictEqual(idField, true);
+  });
 });
 
 after(async () => {
