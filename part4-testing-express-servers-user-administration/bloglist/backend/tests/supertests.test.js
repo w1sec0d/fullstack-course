@@ -68,6 +68,17 @@ describe("MongoDB Tests", () => {
       true
     );
   });
+
+  test("A saved blog with undefined likes starts with 0 by default", async () => {
+    const newBlog = new Blog({
+      title: "Programming it's the hardest thing to do",
+      author: "And that's awesome",
+      url: "asdasddsad",
+    });
+    await newBlog.save();
+
+    assert.strictEqual(newBlog.likes, 0);
+  });
 });
 
 after(async () => {
