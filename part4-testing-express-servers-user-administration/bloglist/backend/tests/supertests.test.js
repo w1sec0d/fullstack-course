@@ -79,6 +79,14 @@ describe("MongoDB Tests", () => {
 
     assert.strictEqual(newBlog.likes, 0);
   });
+
+  test("Proper response if title is missing when creating a blog", async () => {
+    const newBlog = new Blog({
+      author: "And that's awesome",
+      url: "asdasddsad",
+    });
+    await api.post("/api/blogs").send(newBlog).expect(400);
+  });
 });
 
 after(async () => {
