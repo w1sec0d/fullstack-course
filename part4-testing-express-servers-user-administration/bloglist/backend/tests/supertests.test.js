@@ -25,13 +25,14 @@ describe("MongoDB Tests", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
   });
+
   test("Get returns correct amount of blogs", async () => {
     const response = await api.get("/api/blogs");
     assert.strictEqual(response.body.length, helper.initialBlogs.length);
   });
+
   test("Blog Schema returns id field instead of _id", async () => {
     const response = await api.get("/api/blogs");
-    console.log(response.body.map((blog) => blog.id !== undefined));
     const idField = response.body.reduce((prev, blog) => {
       if (!prev) {
         return false;
@@ -40,6 +41,32 @@ describe("MongoDB Tests", () => {
       }
     });
     assert.strictEqual(idField, true);
+  });
+
+  test("A blog can be saved successfully", async () => {
+    const newBlog = new Blog({
+      title: "Programming it's the hardest thing to do",
+      author: "And that's awesome",
+      url: "asdasddsad",
+      likes: 20,
+    });
+
+    await newBlog.save();
+    const response = await api.get("/api/blogs");
+    const savedBlog = response.body.find(
+      (blog) => blog.title === "Programming it's the hardest thing to do"
+    );
+
+    assert.strictEqual(
+      helper.shallowEqualityCheck(savedBlog, {
+        title: "Programming it's the hardest thing to do",
+        author: "And that's awesome",
+        url: "asdasddsad",
+        likes: 20,
+        id: newBlog.id,
+      }),
+      true
+    );
   });
 });
 

@@ -32,4 +32,24 @@ const blogsInDB = async () => {
   return blogs.map((blog) => blog.toJSON());
 };
 
-module.exports = { initialBlogs, nonExistingId, blogsInDB };
+function shallowEqualityCheck(obj1, obj2) {
+  // function from https://sentry.io/answers/how-do-i-check-if-an-array-includes-a-value-in-javascript/
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+  for (const key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+module.exports = {
+  initialBlogs,
+  nonExistingId,
+  blogsInDB,
+  shallowEqualityCheck,
+};
