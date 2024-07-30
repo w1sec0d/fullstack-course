@@ -28,12 +28,8 @@ notesRouter.post('/', async (request, response) => {
 })
 
 notesRouter.delete('/:id', async (request, response, next) => {
-  try {
-    await Note.findByIdAndDelete(request.params.id)
-    response.status(204).end()
-  } catch(exception) {
-    next(exception)
-  }
+  await Note.findByIdAndDelete(request.params.id)
+  response.status(204).end()
 })
 
 notesRouter.put('/:id', (request, response, next) => {
@@ -45,10 +41,10 @@ notesRouter.put('/:id', (request, response, next) => {
   }
 
   Note.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedNote => {
+    .then((updatedNote) => {
       response.json(updatedNote)
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
 
 module.exports = notesRouter
