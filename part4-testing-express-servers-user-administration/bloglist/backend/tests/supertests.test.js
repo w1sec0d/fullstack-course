@@ -46,26 +46,25 @@ describe('When there is initially some blogs saved', () => {
 
   describe('A POST request',() => {
     test('Can save a blog successfully', async () => {
-      const newBlog = new Blog({
+      const newBlog = {
         title: 'Programming it\'s the hardest thing to do',
         author: 'And that\'s awesome',
         url: 'asdasddsad',
         likes: 20,
-      })
+      }
 
-      await newBlog.save()
+      await api.post('/api/blogs').send(newBlog)
       const response = await api.get('/api/blogs')
       const savedBlog = response.body.find(
         (blog) => blog.title === 'Programming it\'s the hardest thing to do'
       )
-
       assert.strictEqual(
         helper.shallowEqualityCheck(savedBlog, {
           title: 'Programming it\'s the hardest thing to do',
           author: 'And that\'s awesome',
           url: 'asdasddsad',
           likes: 20,
-          id: newBlog.id,
+          id: savedBlog.id,
         }),
         true
       )
@@ -105,6 +104,30 @@ describe('When there is initially some blogs saved', () => {
 
       const titles = BlogsAtEnd.map((blog) => blog.title)
       assert(!titles.includes(newBlog.title))
+    })
+  })
+
+  describe('A PUT request',() => {
+    test('Can update a blog',async () => {
+      const initialBlogs = await helper.blogsInDB()
+      const blogIdToUpdate = initialBlogs[0].id
+      await api.put(`/api/blogs/${blogIdToUpdate}`).send({
+        title:'updated text',
+        author:'updated text',
+        url:'updated text',
+        likes:123
+      })
+
+      const response = await api.get(`/api/blogs/${blogIdToUpdate}`)
+      const updatedBlog = response.body
+
+      assert.deepStrictEqual(updatedBlog,{
+        title:'updated text',
+        author:'updated text',
+        url:'updated text',
+        likes:123,
+        id:updatedBlog.id
+      })
     })
   })
 })
