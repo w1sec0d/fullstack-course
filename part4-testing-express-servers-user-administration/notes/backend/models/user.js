@@ -1,9 +1,24 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: [true, 'Username is required'],
+    unique: true, // this ensures the uniqueness of username
+    minlength: [3, 'Username must be at least 3 characters long'],
+    validate: {
+      validator: function(v) {
+        return validator.isAlphanumeric(v)
+      },
+      message: props => `${props.value} is not a valid username! Only letters and numbers are allowed.`
+    }
+  },
   name: String,
-  passwordHash: String,
+  passwordHash: {
+    type: String,
+    required: [true, 'Password is required'],
+  },
   notes: [
     {
       type: mongoose.Schema.Types.ObjectId,
