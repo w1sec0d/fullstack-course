@@ -7,12 +7,14 @@ const { default: mongoose } = require('mongoose')
 
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 beforeEach(async () => {
   // Resets BD documents
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+  await User.deleteMany({})
 })
 
 describe('When there is initially some blogs saved', () => {
@@ -129,6 +131,80 @@ describe('When there is initially some blogs saved', () => {
         id:updatedBlog.id
       })
     })
+  })
+})
+
+describe('When saving new users', () => {
+  test('No provided password returns a 400 error',async() => {
+    const initialUsers = await helper.usersInDB()
+
+    const noPassUser = {
+      username: 'codewi',
+      name:'Carl'
+    }
+    await api.post('/api/users').send(noPassUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDB()
+    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+  })
+  test('No provided username returns a 400 error',async() => {
+    const initialUsers = await helper.usersInDB()
+
+    const noUsernameUser = {
+      password: 'cisco123',
+      name:'Carl'
+    }
+    await api.post('/api/users').send(noUsernameUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDB()
+    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+  })
+  test('Short password returns a 400 error',async() => {
+    const initialUsers = await helper.usersInDB()
+
+    const shortPassUser = {
+      username: 'codewi',
+      password: '12',
+      name:'Carl'
+    }
+    await api.post('/api/users').send(shortPassUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDB()
+    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+  })
+  test('Short username returns a 400 error',async() => {
+    const initialUsers = await helper.usersInDB()
+
+    const shortUsernameUser = {
+      username: 'co',
+      password: 'cisco123',
+      name:'Carl'
+    }
+    await api.post('/api/users').send(shortUsernameUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDB()
+    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+  })
+  test('Not Unique username returns a 400 error',async() => {
+    const existingUser = new User({
+      username:'carl',
+      name:'carlito',
+      passwordHash: 'hey1'
+    })
+    await existingUser.save()
+
+    const initialUsers = await helper.usersInDB()
+
+    const notUniqueUsernameUser = {
+      username: 'carl',
+      password: 'cisco123s',
+      name:'Carls'
+    }
+    await api.post('/api/users').send(notUniqueUsernameUser).expect(400)
+
+    const usersAtEnd = await helper.usersInDB()
+
+    assert.strictEqual(initialUsers.length,usersAtEnd.length)
   })
 })
 

@@ -2,7 +2,7 @@ const validator = require('validator')
 const bcrypt = require('bcrypt')
 
 const userRouter = require('express').Router()
-const User = require('../models/User')
+const User = require('../models/user')
 
 userRouter.get('/',async(request,response) => {
   const users = await User.find({})
@@ -12,8 +12,18 @@ userRouter.get('/',async(request,response) => {
 userRouter.post('/',async(request,response) => {
   const { username, name, password } = request.body
 
-  if(!password || password.length < 8){
-    response.status(400).json({ error: 'Please provide a password of at least 8 characters long' })
+  // USERNAME VALIDATION
+  if(!username || username.length < 3){
+    response.status(400).json({ error: 'Please provide a username of at least 3 characters long' })
+  }
+
+  if(User.find({ username })){
+    response.status(400).json({ error: `Please provide a unique username. "${username}" is already taken` })
+  }
+
+  // PASSWORD VALIDATION
+  if(!password || password.length < 3){
+    response.status(400).json({ error: 'Please provide a password of at least 3 characters long' })
   }
 
   if(!validator.isStrongPassword(password, { minSymbols:0 })){
