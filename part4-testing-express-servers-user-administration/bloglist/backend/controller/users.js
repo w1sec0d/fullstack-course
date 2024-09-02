@@ -14,20 +14,20 @@ userRouter.post('/',async(request,response) => {
 
   // USERNAME VALIDATION
   if(!username || username.length < 3){
-    response.status(400).json({ error: 'Please provide a username of at least 3 characters long' })
+    return response.status(400).json({ error: 'Please provide a username of at least 3 characters long' })
   }
 
-  if(User.find({ username })){
-    response.status(400).json({ error: `Please provide a unique username. "${username}" is already taken` })
+  if(await User.findOne({ username })){
+    return response.status(400).json({ error: `Please provide a unique username. "${username}" is already taken` })
   }
 
   // PASSWORD VALIDATION
   if(!password || password.length < 3){
-    response.status(400).json({ error: 'Please provide a password of at least 3 characters long' })
+    return response.status(400).json({ error: 'Please provide a password of at least 3 characters long' })
   }
 
   if(!validator.isStrongPassword(password, { minSymbols:0 })){
-    response.status(400).json({ error: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' })
+    return response.status(400).json({ error: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' })
   }
 
   const saltRounds = 10
