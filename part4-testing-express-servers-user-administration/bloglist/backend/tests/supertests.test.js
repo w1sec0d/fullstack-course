@@ -1,5 +1,6 @@
 const { test, describe, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
+const jwt = require('jsonwebtoken')
 
 const supertest = require('supertest')
 const app = require('../app')
@@ -48,25 +49,46 @@ describe('When there is initially some blogs saved', () => {
 
   describe('A POST request',() => {
     test('Can save a blog successfully', async () => {
+      const user = new User({
+        username: 'wisecod',
+        name:'carl',
+        passwordHash: 'Cisco123'
+      })
+      await user.save()
+
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.SECRET
+      )
+
       const newBlog = {
-        title: 'Programming it\'s the hardest thing to do',
-        author: 'And that\'s awesome',
+        title: 'Programming its the hardest thing to do',
+        author: 'And thats awesome',
         url: 'asdasddsad',
         likes: 20,
       }
 
-      await api.post('/api/blogs').send(newBlog)
+      await api
+        .post('/api/blogs')
+        .set('Authorization',`Bearer ${token}`)
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
       const response = await api.get('/api/blogs')
+
       const savedBlog = response.body.find(
-        (blog) => blog.title === 'Programming it\'s the hardest thing to do'
+        (blog) => blog.title === 'Programming its the hardest thing to do'
       )
+
       assert.strictEqual(
         helper.shallowEqualityCheck(savedBlog, {
-          title: 'Programming it\'s the hardest thing to do',
-          author: 'And that\'s awesome',
+          title: 'Programming its the hardest thing to do',
+          author: 'And thats awesome',
           url: 'asdasddsad',
           likes: 20,
           id: savedBlog.id,
+          user: savedBlog.user
         }),
         true
       )
@@ -82,24 +104,55 @@ describe('When there is initially some blogs saved', () => {
       assert.strictEqual(newBlog.likes, 0)
     })
     test('Gives proper response if title is missing when creating a blog', async () => {
+      const user = new User({
+        username: 'wisecod',
+        name:'carl',
+        passwordHash: 'Cisco123'
+      })
+      await user.save()
+
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.SECRET
+      )
+
       const newBlog = new Blog({
         author: 'And that\'s awesome',
         url: 'asdasddsad',
       })
-      await api.post('/api/blogs').send(newBlog).expect(400)
+      await api
+        .post('/api/blogs')
+        .set('Authorization',`Bearer ${token}`)
+        .send(newBlog)
+        .expect(400)
     })
   })
 
   describe('A DELETE request',() => {
     test('Can delete a post',async () => {
+      const user = new User({
+        username: 'wisecod',
+        name:'carl',
+        passwordHash: 'Cisco123'
+      })
+      await user.save()
+
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.SECRET
+      )
+
       const newBlog = new Blog({
         title: 'This post should be deleted soon',
         author: 'And that\'s awesome',
         url: 'asdasddsad',
-        likes:0,
+        likes: 0,
+        user: user
       })
       await newBlog.save()
-      await api.delete(`/api/blogs/${newBlog.id}`).expect(204)
+
+      await api.delete(`/api/blogs/${newBlog.id}`).set('Authorization',`Bearer ${token}`)
+        .expect(204)
 
       const BlogsAtEnd = await helper.blogsInDB()
       assert.strictEqual(BlogsAtEnd.length, helper.initialBlogs.length)
