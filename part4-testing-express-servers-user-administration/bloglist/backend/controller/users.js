@@ -22,12 +22,8 @@ userRouter.post('/',async(request,response) => {
   }
 
   // PASSWORD VALIDATION
-  if(!password || password.length < 3){
-    return response.status(400).json({ error: 'Please provide a password of at least 3 characters long' })
-  }
-
-  if(!validator.isStrongPassword(password, { minSymbols:0 })){
-    return response.status(400).json({ error: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' })
+  if(!password || password.length < 3 ||!validator.isStrongPassword(password, { minSymbols:0 })){
+    return response.status(400).json({ error: 'Password must contain at least 3 characters with one uppercase letter, one lowercase letter, and one number' })
   }
 
   const saltRounds = 10
