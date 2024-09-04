@@ -1,6 +1,7 @@
 const { test, describe, after } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const { shallowEqualityCheck } = require('./test_helper')
 
 const blogs = [
   {
@@ -52,6 +53,7 @@ const blogs = [
     __v: 0,
   },
 ]
+
 const listWithOneBlog = [
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -153,6 +155,43 @@ describe('favorite blog', () => {
       author: 'Michael Chan',
       likes: 12,
     })
+  })
+})
+
+describe('most blogs',() => {
+  test('of a list is the correct', () => {
+    assert.strictEqual(
+      shallowEqualityCheck(
+        listHelper.mostBlogs(blogs),
+        {
+          author: 'Robert C. Martin',
+          blogs: 3
+        }
+      ),
+      true
+    )
+  })
+  test('of a list with many top bloggers is any of them', () => {
+    let blogsCopy = [...blogs]
+    blogsCopy = blogsCopy.slice(0,-1)
+
+    const authorA = {
+      author: 'Robert C. Martin',
+      blogs: 2
+    }
+    const authorB = {
+      author: 'Edsger W. Dijkstra',
+      blogs: 2
+    }
+
+    return listHelper.mostBlogs(blogsCopy) === authorA || listHelper.mostBlogs(blogsCopy) === authorB
+  })
+
+  test('of an empty list is null',() => {
+    assert.strictEqual(
+      listHelper.mostBlogs([]),
+      null
+    )
   })
 })
 

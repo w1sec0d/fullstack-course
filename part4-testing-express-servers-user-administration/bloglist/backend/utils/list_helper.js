@@ -20,8 +20,44 @@ const favoriteBlog = (blogs) => {
   return { title: result.title, author: result.author, likes: result.likes }
 }
 
+const mostBlogs = (blogs) => {
+  if (!blogs){
+    return null
+  }
+
+  const authorList = [...new Set(blogs.map((blog) => blog.author))] // Creates unique author array
+
+  const blogsPerAuthor = []
+
+  // Iterates each author to count how many blogs has each of them
+  authorList.forEach(
+    (author) => {
+      let count = blogs.reduce(
+        (total,blog) => {
+          return blog.author === author ? total + 1 : total
+        }
+        , 0
+      )
+      blogsPerAuthor.push({ author, blogs: count })
+    }
+  )
+
+  // Compares each author with each other preserving the maximum blogs author
+  const maxAuthor =
+      blogsPerAuthor.reduce(
+        (maxBlogs, author) => {
+          return author.blogs > maxBlogs.blogs ? author : maxBlogs
+        }
+        , { blogs: 0 }
+      )
+
+  return maxAuthor.author ? maxAuthor : null
+}
+
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs
 }
