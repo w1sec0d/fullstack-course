@@ -195,4 +195,41 @@ describe('most blogs',() => {
   })
 })
 
+describe('most likes',() => {
+  test('of a list is the correct', () => {
+    assert.strictEqual(
+      shallowEqualityCheck(
+        listHelper.mostLikes(blogs),
+        {
+          author: 'Edsger W. Dijkstra',
+          likes: 17
+        }
+      ),
+      true
+    )
+  })
+  test('of a list with many top bloggers is any of them', () => {
+    let blogsCopy = [...blogs]
+    blogsCopy[blogsCopy.length - 2].likes = 5
+
+    const authorA = {
+      author: 'Robert C. Martin',
+      likes: 17
+    }
+    const authorB = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+
+    return listHelper.mostLikes(blogsCopy) === authorA || listHelper.mostLikes(blogsCopy) === authorB
+  })
+
+  test('of an empty list is null',() => {
+    assert.strictEqual(
+      listHelper.mostLikes([]),
+      null
+    )
+  })
+})
+
 after()
