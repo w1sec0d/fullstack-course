@@ -7,6 +7,47 @@ import Note from "./components/Note";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 
+const LoginForm = ({
+  onSubmit,
+  username,
+  setUsername,
+  password,
+  setPassword,
+}) => (
+  <form onSubmit={onSubmit}>
+    <div>
+      username
+      <input
+        type="text"
+        value={username}
+        name="Username"
+        id="Username"
+        onChange={({ target }) => setUsername(target.value)}
+        autoComplete="username"
+      />
+    </div>
+    <div>
+      password
+      <input
+        type="password"
+        value={password}
+        name="password"
+        id="password"
+        onChange={({ target }) => setPassword(target.value)}
+        autoComplete="current-password"
+      />
+    </div>
+    <button type="submit">login</button>
+  </form>
+);
+
+const NoteForm = ({ addNote, newNote, handleNoteChange }) => (
+  <form onSubmit={addNote}>
+    <input value={newNote} onChange={handleNoteChange} />
+    <button type="submit">save</button>
+  </form>
+);
+
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
@@ -81,45 +122,30 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange} />
-      <button type="submit">save</button>
-    </form>
-  );
-
   return (
     <div>
-      <h1>Notes</h1>
       <Notification message={errorMessage} />
+
       <h2>Login</h2>
 
-      {user === null && loginForm()}
-      {user !== null && noteForm()}
+      {user === null ? (
+        <LoginForm
+          onSubmit={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
+      ) : (
+        <div>
+          <p>{user.name} logged-in</p>
+          <NoteForm
+            newNote={newNote}
+            addNote={addNote}
+            handleNoteChange={handleNoteChange}
+          />
+        </div>
+      )}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
