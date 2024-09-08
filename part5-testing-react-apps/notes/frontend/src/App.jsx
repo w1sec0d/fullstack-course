@@ -43,7 +43,12 @@ const LoginForm = ({
 
 const NoteForm = ({ addNote, newNote, handleNoteChange }) => (
   <form onSubmit={addNote}>
-    <input value={newNote} onChange={handleNoteChange} />
+    <input
+      value={newNote}
+      onChange={handleNoteChange}
+      id="noteText"
+      name="noteText"
+    />
     <button type="submit">save</button>
   </form>
 );
@@ -63,6 +68,15 @@ const App = () => {
     noteService.getAll().then((initialNotes) => {
       setNotes(initialNotes);
     });
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
+    }
   }, []);
 
   const addNote = (event) => {
@@ -109,6 +123,9 @@ const App = () => {
         username,
         password,
       });
+
+      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      noteService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -117,6 +134,15 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      window.localStorage.removeItem("loggedNoteappUser");
+      setUser(null);
+    } catch (error) {
+      console.error("There was an error signing out");
     }
   };
 
@@ -139,6 +165,7 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged-in</p>
+          <button onClick={handleSignOut}>Sign Out</button>
           <NoteForm
             newNote={newNote}
             addNote={addNote}
