@@ -6,6 +6,7 @@ import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import Blog from "./components/Blog";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -57,9 +58,7 @@ const App = () => {
           <BlogForm setBlogs={setBlogs} />
         </Togglable>
         {blogs.map((blog) => (
-          <p key={blog.id}>
-            {blog.title} {blog.author}
-          </p>
+          <Blog value={blog} key={blog.id} />
         ))}
       </div>
     </>
