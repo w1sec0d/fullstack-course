@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import BlogForm from "./components/BlogForm";
+import Swal from "sweetalert2";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -27,6 +28,13 @@ const App = () => {
   const handleLogOut = () => {
     window.localStorage.removeItem("bloglistAppUser");
     setUser(null);
+    Swal.fire({
+      title: "Logged out successfully",
+      icon: "success",
+      timer: 4000,
+      toast: true,
+      position: "top-right",
+    });
   };
 
   if (user === null) {

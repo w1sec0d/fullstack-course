@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import Swal from "sweetalert2";
 
 const BlogForm = ({ setBlogs }) => {
   const [title, setTitle] = useState("");
@@ -14,6 +15,14 @@ const BlogForm = ({ setBlogs }) => {
       setTitle("");
       setAuthor("");
       setUrl("");
+      Swal.fire({
+        title: "Blog created successfully",
+        icon: "success",
+        timer: 4000,
+        toast: true,
+        showCloseButton: true,
+        position: "top-right",
+      });
     }
   };
 

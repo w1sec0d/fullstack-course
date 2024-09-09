@@ -1,6 +1,7 @@
 import { useState } from "react";
 import login from "../services/login";
 import blogService from "../services/blogs";
+import Swal from "sweetalert2";
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState("");
@@ -19,9 +20,24 @@ const LoginForm = ({ setUser }) => {
         setUser(response);
         setUsername("");
         setPassword("");
+        Swal.fire({
+          title: "Logged in successfully",
+          icon: "success",
+          timer: 4000,
+          toast: true,
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error("Login failed", error);
+      Swal.fire({
+        title: "Login failed",
+        text: "Wrong username/password. Please try again",
+        icon: "error",
+        toast: true,
+        showCloseButton: true,
+        position: "top-right",
+      });
     }
   };
   return (
