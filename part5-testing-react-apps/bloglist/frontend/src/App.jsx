@@ -14,7 +14,18 @@ const App = () => {
     fetchBlogs();
   }, []);
 
-  console.log(user);
+  useEffect(() => {
+    const savedUser = window.localStorage.getItem("bloglistAppUser");
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setUser(user);
+    }
+  }, []);
+
+  const handleLogOut = () => {
+    window.localStorage.removeItem("bloglistAppUser");
+    setUser(null);
+  };
 
   if (user === null) {
     return <LoginForm setUser={setUser} />;
@@ -25,7 +36,8 @@ const App = () => {
       <h2>Blogs</h2>
       <div>
         <p>
-          Welcome <b>{user.username}</b>
+          Welcome <b>{user.username}</b>{" "}
+          <button onClick={handleLogOut}>Log Out</button>
         </p>
         <hr />
         {blogs.map((blog) => (

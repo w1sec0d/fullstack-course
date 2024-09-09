@@ -10,6 +10,10 @@ const LoginForm = ({ setUser }) => {
     try {
       const response = await login({ username, password });
       if (response) {
+        window.localStorage.setItem(
+          "bloglistAppUser",
+          JSON.stringify(response)
+        );
         setUser(response);
         setUsername("");
         setPassword("");
