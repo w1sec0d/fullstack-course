@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+
+import Swal from "sweetalert2";
+
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import BlogForm from "./components/BlogForm";
-import Swal from "sweetalert2";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -50,7 +53,9 @@ const App = () => {
           <button onClick={handleLogOut}>Log Out</button>
         </p>
         <hr />
-        <BlogForm setBlogs={setBlogs} />
+        <Togglable buttonLabel="New Blog">
+          <BlogForm setBlogs={setBlogs} />
+        </Togglable>
         {blogs.map((blog) => (
           <p key={blog.id}>
             {blog.title} {blog.author}
