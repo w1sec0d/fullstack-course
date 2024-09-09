@@ -6,15 +6,13 @@ const User = require('../models/user')
 loginRouter.post('/', async(request, response) => {
   const { username, password } = request.body
 
-  console.log(username,password)
-
   const user = await User.findOne({ username })
   const passwordCorrect = user === null
     ? false
     : await bcrypt.compare(password, user.passwordHash)
 
   if(!user || !passwordCorrect){
-    response.status(401).json({
+    return response.status(401).json({
       error:'Invalid username or password'
     })
   }
@@ -30,7 +28,7 @@ loginRouter.post('/', async(request, response) => {
     { expiresIn: 60*60 }
   )
 
-  response
+  return response
     .status(200)
     .json({ token, username: user.username, name: user.name })
 })
