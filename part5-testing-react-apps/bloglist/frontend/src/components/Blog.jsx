@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ value }) => {
+const Blog = ({ value, handleLike }) => {
   const [detailsShown, setDetailsShown] = useState(false);
 
   const toggleDetailsShown = () => {
@@ -21,7 +21,10 @@ const Blog = ({ value }) => {
       {detailsShown ? (
         <>
           <p>{value.author}</p>
-          <p>Likes: {value.likes}</p>
+          <p>
+            Likes: {value.likes}{" "}
+            <button onClick={() => handleLike(value)}>Like</button>
+          </p>
           <p>
             <a href={value.url} target="_BLANK">
               {value.url}

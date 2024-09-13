@@ -41,6 +41,26 @@ const App = () => {
     });
   };
 
+  const handleLike = async (blog) => {
+    const putRequestObject = {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+    };
+
+    const updatedBlog = await blogService.updateBlog(blog.id, putRequestObject);
+    if (updatedBlog) {
+      let updatedBlogs = [...blogs];
+      const blogIndexToUpdate = updatedBlogs.findIndex(
+        (oldBlog) => oldBlog.id === blog.id
+      );
+      updatedBlogs[blogIndexToUpdate].likes += 1;
+      setBlogs(updatedBlogs);
+    }
+  };
+
   if (user === null) {
     return <LoginForm setUser={setUser} />;
   }
@@ -58,7 +78,7 @@ const App = () => {
           <BlogForm setBlogs={setBlogs} />
         </Togglable>
         {blogs.map((blog) => (
-          <Blog value={blog} key={blog.id} />
+          <Blog value={blog} key={blog.id} handleLike={handleLike} />
         ))}
       </div>
     </>

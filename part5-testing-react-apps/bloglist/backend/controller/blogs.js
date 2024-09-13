@@ -14,6 +14,10 @@ blogRouter.get('/:id', async (request, response) => {
 })
 
 blogRouter.post('/',middleware.userExtractor, async (request, response) => {
+  if(!request.user){
+    return response.status(401).json({ error:'No token authorization given!' })
+  }
+
   const body = request.body
 
   const blog = new Blog({
@@ -45,7 +49,11 @@ blogRouter.delete('/:id', async (request, response) => {
   }
 })
 
-blogRouter.put('/:id', async(request,response) => {
+blogRouter.put('/:id', middleware.userExtractor,async(request,response) => {
+  if(!request.user){
+    return response.status(401).json({ error:'No token authorization given!' })
+  }
+
   const newBlog = {
     title: request.body.title,
     author: request.body.author,
