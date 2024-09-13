@@ -20,16 +20,16 @@ const Blog = ({ value, handleLike }) => {
       <p>{value.title}</p>
       {detailsShown ? (
         <>
-          <p>{value.author}</p>
-          <p>
-            Likes: {value.likes}{" "}
-            <button onClick={() => handleLike(value)}>Like</button>
-          </p>
           <p>
             <a href={value.url} target="_BLANK">
               {value.url}
             </a>
           </p>
+          <p>
+            Likes: {value.likes}{" "}
+            <button onClick={() => handleLike(value)}>Like</button>
+          </p>
+          <p>{value.author}</p>
           <button onClick={toggleDetailsShown}>Hide</button>
         </>
       ) : (
