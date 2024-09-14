@@ -62,6 +62,28 @@ const App = () => {
     }
   };
 
+  const handleRemove = async (blog) => {
+    Swal.fire({
+      title: `Are you sure ?`,
+      text: `Do you want to delete ${blog.title} blog?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      preConfirm: async () => {
+        try {
+          await blogService.removeBlog(blog.id);
+
+          setBlogs((oldBlogs) =>
+            oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
+          );
+          Swal.fire("Deleted!", "The blog has been deleted.", "success");
+        } catch {
+          Swal.fire("Error!", "Failed to delete the blog.", "error");
+        }
+      },
+    });
+  };
+
   if (user === null) {
     return <LoginForm setUser={setUser} />;
   }
@@ -78,9 +100,22 @@ const App = () => {
         <Togglable buttonLabel="New Blog">
           <BlogForm setBlogs={setBlogs} />
         </Togglable>
-        {blogs.map((blog) => (
-          <Blog value={blog} key={blog.id} handleLike={handleLike} />
-        ))}
+        {blogs.map((blog) => {
+          let removeButtonShown = false;
+          if (blog.user) {
+            removeButtonShown = blog.user.username === user.username;
+          }
+
+          return (
+            <Blog
+              value={blog}
+              key={blog.id}
+              handleLike={handleLike}
+              handleRemove={handleRemove}
+              showRemove={removeButtonShown}
+            />
+          );
+        })}
       </div>
     </>
   );

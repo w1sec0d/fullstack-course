@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ value, handleLike }) => {
+const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
   const [detailsShown, setDetailsShown] = useState(false);
 
   const toggleDetailsShown = () => {
@@ -20,6 +20,7 @@ const Blog = ({ value, handleLike }) => {
       <p>{value.title}</p>
       {detailsShown ? (
         <>
+          <button onClick={toggleDetailsShown}>Hide</button>
           <p>
             <a href={value.url} target="_BLANK">
               {value.url}
@@ -30,7 +31,9 @@ const Blog = ({ value, handleLike }) => {
             <button onClick={() => handleLike(value)}>Like</button>
           </p>
           <p>{value.author}</p>
-          <button onClick={toggleDetailsShown}>Hide</button>
+          <p style={showRemove ? {} : { display: "none" }}>
+            <button onClick={() => handleRemove(value)}>Remove</button>
+          </p>
         </>
       ) : (
         <button onClick={toggleDetailsShown}>View</button>
