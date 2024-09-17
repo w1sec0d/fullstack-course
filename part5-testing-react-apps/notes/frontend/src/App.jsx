@@ -1,102 +1,102 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react'
 
-import noteService from "./services/notes";
-import loginService from "./services/login";
+import noteService from './services/notes'
+import loginService from './services/login'
 
-import Note from "./components/Note";
-import Notification from "./components/Notification";
-import Footer from "./components/Footer";
+import Note from './components/Note'
+import Notification from './components/Notification'
+import Footer from './components/Footer'
 
-import LoginForm from "./components/LoginForm";
-import NoteForm from "./components/NoteForm";
-import Togglable from "./components/Togglable";
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [showAll, setShowAll] = useState(true);
+  const [notes, setNotes] = useState([])
+  const [showAll, setShowAll] = useState(true)
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
-  const noteFormRef = useRef();
+  const noteFormRef = useRef()
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
-    });
-  }, []);
+      setNotes(initialNotes)
+    })
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      noteService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const addNote = (note) => {
-    noteFormRef.current.toggleVisibility();
+    noteFormRef.current.toggleVisibility()
 
     noteService
       .create(note)
-      .then((note) => setNotes((oldNotes) => oldNotes.concat(note)));
-  };
+      .then((note) => setNotes((oldNotes) => oldNotes.concat(note)))
+  }
 
   const toggleImportanceOf = (id) => {
-    const note = notes.find((n) => n.id === id);
-    const changedNote = { ...note, important: !note.important };
+    const note = notes.find((n) => n.id === id)
+    const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
       .then((returnedNote) => {
-        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
       })
       .catch(() => {
         setErrorMessage(
           `Note '${note.content}' was already removed from server`
-        );
+        )
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
-  };
+          setErrorMessage(null)
+        }, 5000)
+      })
+  }
 
   const handleLogin = async (event, username, password) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
       const user = await loginService.login({
         username,
         password,
-      });
+      })
 
-      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
-      noteService.setToken(user.token);
-      setUser(user);
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+      noteService.setToken(user.token)
+      setUser(user)
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setErrorMessage('Wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+        setErrorMessage(null)
+      }, 5000)
     }
-  };
+  }
 
   const handleSignOut = async () => {
     try {
-      window.localStorage.removeItem("loggedNoteappUser");
-      setUser(null);
+      window.localStorage.removeItem('loggedNoteappUser')
+      setUser(null)
     } catch (error) {
-      console.error("There was an error signing out");
+      console.error('There was an error signing out')
     }
-  };
+  }
 
-  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
   return (
     <div>
-      <h1 style={{ color: "darkgreen", fontStyle: "italic" }}>Notes</h1>
+      <h1 style={{ color: 'darkgreen', fontStyle: 'italic' }}>Notes</h1>
 
       <Notification message={errorMessage} />
 
@@ -116,7 +116,7 @@ const App = () => {
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? "important" : "all"}
+          show {showAll ? 'important' : 'all'}
         </button>
       </div>
       <ul>
@@ -130,7 +130,7 @@ const App = () => {
       </ul>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
