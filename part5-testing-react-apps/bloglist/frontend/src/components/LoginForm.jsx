@@ -2,6 +2,7 @@ import { useState } from "react";
 import login from "../services/login";
 import blogService from "../services/blogs";
 import Swal from "sweetalert2";
+import PropTypes from "prop-types";
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState("");
@@ -70,6 +71,14 @@ const LoginForm = ({ setUser }) => {
       </form>
     </>
   );
+};
+
+LoginForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleUsernameChange: PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
 };
 
 export default LoginForm;
