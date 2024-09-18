@@ -96,7 +96,6 @@ const App = () => {
           Welcome <b>{user.username}</b>{" "}
           <button onClick={handleLogOut}>Log Out</button>
         </p>
-        <Togglable> buttonLabel forgotten... </Togglable>
         <hr />
         <Togglable buttonLabel="New Blog">
           <BlogForm setBlogs={setBlogs} />
