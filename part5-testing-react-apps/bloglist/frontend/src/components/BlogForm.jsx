@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import Swal from "sweetalert2";
 
-const BlogForm = ({ setBlogs }) => {
+const BlogForm = ({ creationHandler, setBlogs }) => {
   // Blog form state is only used in this component
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -27,8 +27,9 @@ const BlogForm = ({ setBlogs }) => {
     }
   };
 
+
   return (
-    <form onSubmit={handleCreation}>
+    <form onSubmit={creationHandler ? creationHandler(title,author,url) : handleCreation}>
       <div>
         <label htmlFor="title">Title</label>
         <input
