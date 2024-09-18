@@ -16,8 +16,9 @@ const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <p>{value.title}</p>
+      <p>{value.author}</p>
       {detailsShown ? (
         <>
           <button onClick={toggleDetailsShown}>Hide</button>
@@ -30,7 +31,6 @@ const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
             Likes: {value.likes}{" "}
             <button onClick={() => handleLike(value)}>Like</button>
           </p>
-          <p>{value.author}</p>
           <p style={showRemove ? {} : { display: "none" }}>
             <button onClick={() => handleRemove(value)}>Remove</button>
           </p>
