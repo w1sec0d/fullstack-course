@@ -17,6 +17,7 @@ const LoginForm = ({ handleSubmit }) => {
             onChange={({ target }) => {
               setUsername(target.value)
             }}
+            data-testid='username'
           />
         </div>
         <div>
@@ -27,6 +28,7 @@ const LoginForm = ({ handleSubmit }) => {
             onChange={({ target }) => {
               setPassword(target.value)
             }}
+            data-testid='password'
           />
         </div>
         <button type="submit">login</button>

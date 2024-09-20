@@ -101,7 +101,7 @@ const App = () => {
       <Notification message={errorMessage} />
 
       {user === null ? (
-        <Togglable buttonLabel="login">
+        <Togglable buttonLabel="Log In">
           <LoginForm handleSubmit={handleLogin} />
         </Togglable>
       ) : (
