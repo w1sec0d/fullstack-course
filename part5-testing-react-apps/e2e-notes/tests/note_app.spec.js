@@ -45,10 +45,12 @@ describe('note app', ()=>{
       })
   
       test('importance can be changed', async ({ page }) => {
+        await page.pause()
         const otherNoteText = await page.getByText('second note')
         const otherdNoteElement = await otherNoteText.locator('..')
     
         await otherdNoteElement.getByRole('button', { name: 'make not important' }).click()
+        
         await expect(otherdNoteElement.getByText('make important')).toBeVisible()
       })
     })
@@ -60,11 +62,12 @@ describe('note app', ()=>{
       })
 
       test('one of those can be made nonimportant', async ({ page }) => {
-        await page.pause()
-        await page.getByText('second note').getByRole('button', { name: 'make not important' }).click()
+        const button = await page.locator('li').filter({ hasText: 'second notemake not important' }).getByRole('button')
+        await expect(button).toBeVisible({ timeout: 10000 }) // Ensure the button is visible
+        await button.click({ timeout: 10000 }) // Increase the timeout for the click action
 
-        await expect(page.getByText('second note').getByText('make important')).toBeVisible()
-      })
+        await expect(page.locator('li').filter({ hasText: 'second notemake important' }).getByRole('button')).toBeVisible()
+      })  
     })
   }) 
 
