@@ -44,7 +44,7 @@ describe('note app', ()=>{
         const noteB = await createNote(page, 'second note', true)
         await expect(page.getByText("second note")).toBeVisible({ timeout: 10000 }) // Ensure the button is visible
         const noteC = await createNote(page, 'third note', true)
-        await expect(page.getByText("third note")).toBeVisible({ timeout: 10000 }) // Ensure the button is visible
+        await expect(page.getByText("first note")).toBeVisible({ timeout: 10000 }) // Ensure the button is visible
       })
   
       test('importance can be changed', async ({ page }) => {

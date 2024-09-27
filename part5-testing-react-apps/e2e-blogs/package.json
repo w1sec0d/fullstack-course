@@ -1,17 +1,14 @@
 {
-  "name": "e2e-notes",
+  "name": "e2e-blogs",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "playwright test",
-    "test:report": "playwright show-report"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.47.2",
-    "@types/node": "^22.5.5"
+    "@types/node": "^22.7.3"
   }
 }
