@@ -85,7 +85,10 @@ const App = () => {
   };
 
   if (user === null) {
-    return <LoginForm setUser={setUser} />;
+    return (<>
+      <h2>Blogs</h2>
+      <LoginForm setUser={setUser} />
+    </>)
   }
 
   return (
