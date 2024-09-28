@@ -32,4 +32,19 @@ describe('Blog app', () => {
         await expect(page.getByText("Log-in to application")).toBeVisible()
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page,"carl","Cisco123*")
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+        await page.getByRole('button', { name: 'New Blog' }).click();
+        await page.getByLabel('Title').fill('Blog Test');
+        await page.getByLabel('Author').fill('Carl');
+        await page.getByLabel('Url').fill('mytest.com');
+        await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByText('Blog Test')).toBeVisible();
+    })
+  })
 })
