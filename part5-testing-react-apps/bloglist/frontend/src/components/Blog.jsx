@@ -27,7 +27,7 @@ const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
               {value.url}
             </a>
           </p>
-          <p>
+          <p data-testid={`likes_${value.title}`}>
             Likes: {value.likes}{" "}
             <button onClick={() => handleLike(value)}>Like</button>
           </p>
