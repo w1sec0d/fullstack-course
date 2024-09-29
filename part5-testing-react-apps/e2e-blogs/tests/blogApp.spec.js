@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 const {loginWith, createBlog} = require("./helper")
+const { before } = require('node:test')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -40,23 +41,49 @@ describe('Blog app', () => {
 
     test('A new blog can be created', async ({ page }) => {
       await createBlog(page,{name:"testBlog", author:"Carl", URL:"test.com"})
-      await expect(page.getByText('testBlog')).toBeVisible();
+      await expect(page.getByText('testBlog')).toBeVisible()
     })
 
-    test('A blog can be liked', async ({page}) => {
-      await createBlog(page, {name:"testBlog", author:"Carl", URL:"test.com"})
-      await page.getByRole('button', { name: 'View' }).click();
-      await page.getByRole('button', { name: 'Like' }).click();
-      await expect(page.getByTestId("likes_testBlog")).toHaveText("Likes: 1 Like")
-    })
-    
-    test('A blog can be deleted', async({page}) => {
-      await createBlog(page, {name:"testBlog", author:"Carl", URL:"test.com"})
-      await page.getByRole('button', { name: 'View' }).click();
-      await page.getByRole('button', { name: 'Remove' }).click();
-      await page.getByRole('button', { name: 'Yes, delete it!' }).click();
-      await page.getByRole('button', { name: 'OK' }).click();
-      await expect(page.getByText("testBlog")).not.toBeVisible()
+    describe('And a blog is created',()=>{
+      beforeEach(async({page})=> {
+        await createBlog(page, {name:"testBlog", author:"Carl", URL:"test.com"})
+      })
+
+      test('A blog can be liked', async ({page}) => {
+        await page.getByRole('button', { name: 'View' }).click()
+        await page.getByRole('button', { name: 'Like' }).click()
+        await expect(page.getByTestId("likes_testBlog")).toHaveText("Likes: 1 Like")
+      })
+      
+      test('A blog can be deleted', async({page}) => {
+        await page.getByRole('button', { name: 'View' }).click()
+        await page.getByRole('button', { name: 'Remove' }).click()
+        await page.getByRole('button', { name: 'Yes, delete it!' }).click()
+        await page.getByRole('button', { name: 'OK' }).click()
+        await expect(page.getByText("testBlog")).not.toBeVisible()
+      })
+
+      test("Only the author can see the delete button", async({page, request})=> {
+
+        // Checks the current author sees the remove button
+        await page.getByRole('button', { name: 'View' }).click()
+        await expect(page.getByRole('button', { name: 'Remove' })).toBeVisible()
+        await page.getByRole('button', { name: 'Log Out' }).click()
+
+        // Creates new user
+        await request.post("http://localhost:3001/api/users",{data: {
+          name: "hanna",
+          username:"hanna",
+          password:"Cisco123*"
+        }})
+
+        // Checks that new user does not see remove button
+        await page.getByLabel('Username').fill('hanna')
+        await page.getByLabel('Password').fill('Cisco123*')
+        await page.getByRole('button', { name: 'Log In' }).click()
+        await page.getByRole('button', { name: 'View' }).click()
+        await expect(page.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+      })
     })
   })
 })
