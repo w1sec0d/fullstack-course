@@ -10,14 +10,15 @@ import Blog from "./components/Blog";
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([]);  
+
+  async function fetchBlogs() {
+    const fetchedBlogs = await blogService.getBlogs();
+    const sortedBlogs = [...fetchedBlogs].sort((a, b) => b.likes - a.likes);
+    setBlogs(sortedBlogs);
+  }
 
   useEffect(() => {
-    async function fetchBlogs() {
-      const fetchedBlogs = await blogService.getBlogs();
-      const sortedBlogs = [...fetchedBlogs].sort((a, b) => b.likes - a.likes);
-      setBlogs(sortedBlogs);
-    }
     fetchBlogs();
   }, []);
 
@@ -101,12 +102,15 @@ const App = () => {
         </p>
         <hr />
         <Togglable buttonLabel="New Blog">
-          <BlogForm setBlogs={setBlogs} />
+          <BlogForm setBlogs={setBlogs} user={user}/>
         </Togglable>
         {blogs.map((blog) => {
           let removeButtonShown = false;
           if (blog.user) {
             removeButtonShown = blog.user.username === user.username;
+            console.log(`blog.user.username ${blog.user.username}`);
+            console.log(`user.username ${user.username}`);
+            console.log({blog});
           }
 
           return (

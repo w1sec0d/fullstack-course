@@ -49,5 +49,10 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'Like' }).click();
       await expect(page.getByTestId("likes_testBlog")).toHaveText("Likes: 1 Like")
     })
+    
+    test('A blog can be deleted', async({page}) => {
+      await createBlog(page,{name:"testBlog", author:"Carl", URL:"test.com"})
+      await page.getByRole('button', { name: 'View' }).click();
+    })
   })
 })

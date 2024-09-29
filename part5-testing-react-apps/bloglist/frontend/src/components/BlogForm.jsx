@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import Swal from "sweetalert2";
 
-const BlogForm = ({ creationHandler, setBlogs }) => {
+const BlogForm = ({ creationHandler, setBlogs, user }) => {
   // Blog form state is only used in this component
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -11,8 +11,18 @@ const BlogForm = ({ creationHandler, setBlogs }) => {
   const handleCreation = async (event) => {
     event.preventDefault();
     const request = await blogService.createBlog({ title, author, url });
+    const userId = request.user;
+    let newRequest = {...request};
+
+    // Adds user info to locally added blog
+    newRequest.user = {
+      id: userId,
+      username: user.username,
+      name: user.name
+    }
+
     if (request) {
-      setBlogs((blogs) => blogs.concat(request));
+      setBlogs((blogs) => blogs.concat(newRequest));
       setTitle("");
       setAuthor("");
       setUrl("");
