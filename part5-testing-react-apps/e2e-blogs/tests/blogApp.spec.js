@@ -38,21 +38,25 @@ describe('Blog app', () => {
       await loginWith(page,"carl","Cisco123*")
     })
 
-    test('a new blog can be created', async ({ page }) => {
+    test('A new blog can be created', async ({ page }) => {
       await createBlog(page,{name:"testBlog", author:"Carl", URL:"test.com"})
       await expect(page.getByText('testBlog')).toBeVisible();
     })
 
     test('A blog can be liked', async ({page}) => {
-      await createBlog(page,{name:"testBlog", author:"Carl", URL:"test.com"})
+      await createBlog(page, {name:"testBlog", author:"Carl", URL:"test.com"})
       await page.getByRole('button', { name: 'View' }).click();
       await page.getByRole('button', { name: 'Like' }).click();
       await expect(page.getByTestId("likes_testBlog")).toHaveText("Likes: 1 Like")
     })
     
     test('A blog can be deleted', async({page}) => {
-      await createBlog(page,{name:"testBlog", author:"Carl", URL:"test.com"})
+      await createBlog(page, {name:"testBlog", author:"Carl", URL:"test.com"})
       await page.getByRole('button', { name: 'View' }).click();
+      await page.getByRole('button', { name: 'Remove' }).click();
+      await page.getByRole('button', { name: 'Yes, delete it!' }).click();
+      await page.getByRole('button', { name: 'OK' }).click();
+      await expect(page.getByText("testBlog")).not.toBeVisible()
     })
   })
 })

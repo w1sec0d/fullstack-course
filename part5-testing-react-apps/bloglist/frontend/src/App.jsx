@@ -8,7 +8,7 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import Blog from "./components/Blog";
 
-const App = () => {
+const App = () => {  
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);  
 
@@ -108,9 +108,6 @@ const App = () => {
           let removeButtonShown = false;
           if (blog.user) {
             removeButtonShown = blog.user.username === user.username;
-            console.log(`blog.user.username ${blog.user.username}`);
-            console.log(`user.username ${user.username}`);
-            console.log({blog});
           }
 
           return (
