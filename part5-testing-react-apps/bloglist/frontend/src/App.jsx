@@ -104,6 +104,7 @@ const App = () => {
         <Togglable buttonLabel="New Blog">
           <BlogForm setBlogs={setBlogs} user={user}/>
         </Togglable>
+        
         {blogs.map((blog) => {
           let removeButtonShown = false;
           if (blog.user) {
