@@ -1,25 +1,17 @@
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App from './App'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 
-const notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    important: true,
-  },
-]
+import App from './App';
+import noteReducer from './reducers/noteReducer';
+
+const store = configureStore({
+  reducer: noteReducer,
+});
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <App notes={notes} />
-)
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
