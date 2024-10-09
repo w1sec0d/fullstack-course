@@ -34,6 +34,12 @@ const reducer = (state = initialState, action) => {
         }
       })      
     }
+
+    case "NEW_NOTE":{
+      const newAnecdote = asObject(action.payload.note)
+      return [...state, newAnecdote]
+    }
+
     default:{
       return state
     }
