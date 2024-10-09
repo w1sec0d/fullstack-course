@@ -23,10 +23,10 @@ const sortByVotes = (anecdotes) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export const createNote = (note) => {
+export const createAnecdote = (anecdote) => {
   return {
-    type: "NEW_NOTE",
-    payload: asObject(note)
+    type: "NEW_ANECDOTE",
+    payload: asObject(anecdote)
   }
 }
 
@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
       }))      
     }
 
-    case "NEW_NOTE":{      
+    case "NEW_ANECDOTE":{      
       const newAnecdote = action.payload
       return sortByVotes([...state, newAnecdote])
     }
