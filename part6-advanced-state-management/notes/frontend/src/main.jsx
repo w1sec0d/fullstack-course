@@ -7,9 +7,16 @@ import App from './App';
 import noteReducer, {createNote} from './reducers/noteReducer';
 import filterReducer, {filterChange} from './reducers/filterReducer';
 
+import noteService from './services/notes'
+import noteReducer, { appendNote } from './reducers/noteReducer'
+
 const store = configureStore({
   reducer: combineReducers({notes:noteReducer, filter:filterReducer}),
 });
+
+noteService.getAll().then(notes =>
+  store.dispatch(setNotes(notes))
+)
 
 console.log(store.getState());
 

@@ -10,11 +10,13 @@
     "start:test": "NODE_ENV=test node index.js",
     "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "server": "json-server -p3001 --watch db.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -29,7 +31,7 @@
     "@stylistic/eslint-plugin-js": "^2.3.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.6.0",
-    "globals": "^15.8.0",
+    "globals": "^15.11.0",
     "nodemon": "^2.0.15",
     "supertest": "^7.0.0"
   }
