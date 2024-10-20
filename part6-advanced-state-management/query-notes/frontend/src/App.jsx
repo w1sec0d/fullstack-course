@@ -28,6 +28,7 @@ const App = () => {
     event.target.note.value = ''
     newNoteMutation.mutate({ content, important: true })
   }
+console.log("render");
 
   const toggleImportance = (note) => {
     updateNoteMutation.mutate({...note, important: !note.important })
@@ -35,7 +36,8 @@ const App = () => {
 
   const result = useQuery({
     queryKey: ['notes'],
-    queryFn: getNotes
+    queryFn: getNotes,
+    refetchOnWindowFocus:false
   })
   // console.log(JSON.parse(JSON.stringify(result)))
 
