@@ -2,7 +2,7 @@
   "notes": [
     {
       "content": "the app state is in redux store",
-      "important": true,
+      "important": false,
       "id": "1"
     },
     {
@@ -24,6 +24,21 @@
       "id": "0467",
       "content": "asdasd",
       "important": false
+    },
+    {
+      "id": "90c3",
+      "content": "new note",
+      "important": true
+    },
+    {
+      "id": "525a",
+      "content": "my newn note",
+      "important": true
+    },
+    {
+      "id": "beac",
+      "content": "saddsa",
+      "important": true
     }
   ]
 }
