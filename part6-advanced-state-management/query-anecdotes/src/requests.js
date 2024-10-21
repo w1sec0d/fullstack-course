@@ -11,3 +11,10 @@ export const newAnecdote = async (anectode) => {
   const request = await axios.post(baseUrl, anectode);
   return request.data;
 };
+
+export const newVote = async (anecdote) => {
+  const request = await axios.patch(baseUrl + `/${anecdote.id}`, {
+    votes: anecdote.votes + 1,
+  });
+  return request.data;
+};
