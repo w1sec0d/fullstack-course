@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchAnecdotes } from './requests'
 
 const App = () => {
-
   const {isPending, error, data} = useQuery({
     queryKey: ["anecdotes"],
     queryFn: fetchAnecdotes,
