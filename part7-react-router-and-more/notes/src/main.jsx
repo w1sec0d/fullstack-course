@@ -9,6 +9,7 @@ import {
   Navigate,
   useParams,
   useNavigate,
+  useMatch
 } from "react-router-dom"
 
 
@@ -19,9 +20,7 @@ const Home = () => (
   </div>
 )
 
-const Note = ({ notes }) => {
-  const id = useParams().id
-  const note = notes.find(n => n.id === Number(id))
+const Note = ({ note }) => {
   return (
     <div>
       <h2>{note.content}</h2>
@@ -81,6 +80,7 @@ const Login = (props) => {
 }
 
 const App = () => {
+
   const [notes, setNotes] = useState([
     {
       id: 1,
@@ -102,6 +102,11 @@ const App = () => {
     }
   ])
 
+  const match = useMatch('/notes/:id')
+  const note = match 
+    ? notes.find(note => note.id === Number(match.params.id))
+    : null
+
   const [user, setUser] = useState(null)
 
   const login = (user) => {
@@ -114,7 +119,6 @@ const App = () => {
 
   return (
     <div>
-      <Router>
         <div>
           <Link style={padding} to="/">home</Link>
           <Link style={padding} to="/notes">notes</Link>
@@ -126,13 +130,12 @@ const App = () => {
         </div>
 
         <Routes>
-          <Route path="/notes/:id" element={<Note notes={notes} />} />
+          <Route path="/notes/:id" element={<Note note={note} />} />
           <Route path="/notes" element={<Notes notes={notes} />} />
           <Route path="/users" element={user ? <Users /> : <Navigate replace to="/login" />} />
           <Route path="/login" element={<Login onLogin={login} />} />
           <Route path="/" element={<Home />} />
         </Routes>
-      </Router>
       <div>
         <br />
         <em>Note app, Department of Computer Science 2023</em>
@@ -141,4 +144,8 @@ const App = () => {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Router>
+    <App />
+  </Router>
+)
