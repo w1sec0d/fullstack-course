@@ -36,7 +36,7 @@ export const { appendAnecdote, vote, setAnecdotes } = anecdoteSlice.actions;
 export const initializeAnecdotes = () => {
   return async (dispatch) => {
     const anecdotes = await anecdoteService.getAll();
-    dispatch(setAnecdotes(anecdotes));
+    dispatch(setAnecdotes(sortByVotes(anecdotes)));
   };
 };
 
