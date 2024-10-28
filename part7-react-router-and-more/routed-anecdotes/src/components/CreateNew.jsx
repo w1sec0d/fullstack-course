@@ -11,9 +11,9 @@ const CreateNew = (props) => {
 
   const handleSubmit = (e) => {
     let newAnecdote = {
-      content: content.value,
-      author: author.value,
-      info: info.value
+      content: content.properties.value,
+      author: author.properties.value,
+      info: info.properties.value
     }
     e.preventDefault()
     props.addNew(newAnecdote)
@@ -36,15 +36,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content}/>
+          <input {...content.properties}/>
         </div>
         <div>
           author
-          <input {...author}/>
+          <input {...author.properties}/>
         </div>
         <div>
           url for more info
-          <input y{...info} />
+          <input {...info.properties} />
         </div>
         <button>create</button>
         <button onClick={resetForm}>reset</button>
