@@ -21,7 +21,7 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  if (!blogs){
+  if (!blogs) {
     return null
   }
 
@@ -30,32 +30,26 @@ const mostBlogs = (blogs) => {
   const blogsPerAuthor = []
 
   // Iterates each author to count how many blogs has each of them
-  authorList.forEach(
-    (author) => {
-      let count = blogs.reduce(
-        (total,blog) => {
-          return blog.author === author ? total + 1 : total
-        }
-        , 0
-      )
-      blogsPerAuthor.push({ author, blogs: count })
-    }
-  )
+  authorList.forEach((author) => {
+    let count = blogs.reduce((total, blog) => {
+      return blog.author === author ? total + 1 : total
+    }, 0)
+    blogsPerAuthor.push({ author, blogs: count })
+  })
 
   // Compares each author with each other preserving the maximum blogs author
-  const maxAuthor =
-      blogsPerAuthor.reduce(
-        (maxBlogs, author) => {
-          return author.blogs > maxBlogs.blogs ? author : maxBlogs
-        }
-        , { blogs: 0 }
-      )
+  const maxAuthor = blogsPerAuthor.reduce(
+    (maxBlogs, author) => {
+      return author.blogs > maxBlogs.blogs ? author : maxBlogs
+    },
+    { blogs: 0 }
+  )
 
   return maxAuthor.author ? maxAuthor : null
 }
 
 const mostLikes = (blogs) => {
-  if (!blogs){
+  if (!blogs) {
     return null
   }
 
@@ -64,35 +58,28 @@ const mostLikes = (blogs) => {
   const blogsPerAuthor = []
 
   // Iterates each author to count how many blogs has each of them
-  authorList.forEach(
-    (author) => {
-      let likes = blogs.reduce(
-        (total,blog) => {
-          return blog.author === author ? total + blog.likes : total
-        }
-        , 0
-      )
-      blogsPerAuthor.push({ author, likes })
-    }
-  )
+  authorList.forEach((author) => {
+    let likes = blogs.reduce((total, blog) => {
+      return blog.author === author ? total + blog.likes : total
+    }, 0)
+    blogsPerAuthor.push({ author, likes })
+  })
 
   // Compares each author with each other preserving the maximum blogs author
-  const maxAuthor =
-      blogsPerAuthor.reduce(
-        (maxLikes, author) => {
-          return author.likes > maxLikes.likes ? author : maxLikes
-        }
-        , { likes: 0 }
-      )
+  const maxAuthor = blogsPerAuthor.reduce(
+    (maxLikes, author) => {
+      return author.likes > maxLikes.likes ? author : maxLikes
+    },
+    { likes: 0 }
+  )
 
   return maxAuthor.author ? maxAuthor : null
 }
-
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
 }

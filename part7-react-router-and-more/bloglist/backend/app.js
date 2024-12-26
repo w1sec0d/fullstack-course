@@ -11,8 +11,7 @@ const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 
 logger.info('Connecting to:', MONGODB_URI)
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to mongoDB'))
+mongoose.connect(MONGODB_URI).then(() => console.log('Connected to mongoDB'))
 
 app.use(cors())
 app.use(express.static('dist'))
@@ -24,7 +23,7 @@ app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
-if(process.env.NODE_ENV === 'test'){
+if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controller/tests')
   app.use('/api/testing', testingRouter)
 }

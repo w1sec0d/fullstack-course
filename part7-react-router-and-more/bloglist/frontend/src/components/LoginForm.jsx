@@ -1,46 +1,43 @@
-import { useState } from "react";
-import login from "../services/login";
-import blogService from "../services/blogs";
-import Swal from "sweetalert2";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import login from '../services/login'
+import blogService from '../services/blogs'
+import Swal from 'sweetalert2'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ setUser }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const response = await login({ username, password });
+      const response = await login({ username, password })
       if (response) {
-        window.localStorage.setItem(
-          "bloglistAppUser",
-          JSON.stringify(response)
-        );
-        blogService.setToken(response.token);
-        setUser(response);
-        setUsername("");
-        setPassword("");
+        window.localStorage.setItem('bloglistAppUser', JSON.stringify(response))
+        blogService.setToken(response.token)
+        setUser(response)
+        setUsername('')
+        setPassword('')
         Swal.fire({
-          title: "Logged in successfully",
-          icon: "success",
+          title: 'Logged in successfully',
+          icon: 'success',
           timer: 4000,
           toast: true,
-          position: "top-right",
-        });
+          position: 'top-right',
+        })
       }
     } catch (error) {
-      console.error("Login failed", error);
+      console.error('Login failed', error)
       Swal.fire({
-        title: "Login failed",
-        text: "Wrong username/password. Please try again",
-        icon: "error",
+        title: 'Login failed',
+        text: 'Wrong username/password. Please try again',
+        icon: 'error',
         toast: true,
         showCloseButton: true,
-        position: "top-right",
-      });
+        position: 'top-right',
+      })
     }
-  };
+  }
   return (
     <>
       <h2>Log-in to application</h2>
@@ -70,11 +67,11 @@ const LoginForm = ({ setUser }) => {
         <button type="submit">Log In</button>
       </form>
     </>
-  );
-};
+  )
+}
 
 LoginForm.propTypes = {
   setUser: PropTypes.func.isRequired,
-};
+}
 
-export default LoginForm;
+export default LoginForm

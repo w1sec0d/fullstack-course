@@ -33,7 +33,7 @@ describe('When there is initially some blogs saved', () => {
     })
   })
 
-  describe('Blog Schema',() => {
+  describe('Blog Schema', () => {
     test('Returns id field instead of _id', async () => {
       const response = await api.get('/api/blogs')
       const idField = response.body.reduce((prev, blog) => {
@@ -47,12 +47,12 @@ describe('When there is initially some blogs saved', () => {
     })
   })
 
-  describe('A POST request',() => {
+  describe('A POST request', () => {
     test('Can save a blog successfully', async () => {
       const user = new User({
         username: 'wisecod',
-        name:'carl',
-        passwordHash: 'Cisco123'
+        name: 'carl',
+        passwordHash: 'Cisco123',
       })
       await user.save()
 
@@ -70,7 +70,7 @@ describe('When there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
-        .set('Authorization',`Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -83,12 +83,12 @@ describe('When there is initially some blogs saved', () => {
 
       assert.strictEqual(
         helper.shallowEqualityCheck(savedBlog, {
-          title: 'Programming its the hardest thing to do',
+          title: 'Programming it\'s the hardest thing to do',
           author: 'And thats awesome',
           url: 'asdasddsad',
           likes: 20,
           id: savedBlog.id,
-          user: savedBlog.user
+          user: savedBlog.user,
         }),
         true
       )
@@ -106,8 +106,8 @@ describe('When there is initially some blogs saved', () => {
     test('Gives proper response if title is missing when creating a blog', async () => {
       const user = new User({
         username: 'wisecod',
-        name:'carl',
-        passwordHash: 'Cisco123'
+        name: 'carl',
+        passwordHash: 'Cisco123',
       })
       await user.save()
 
@@ -122,18 +122,18 @@ describe('When there is initially some blogs saved', () => {
       })
       await api
         .post('/api/blogs')
-        .set('Authorization',`Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
     })
   })
 
-  describe('A DELETE request',() => {
-    test('Can delete a post',async () => {
+  describe('A DELETE request', () => {
+    test('Can delete a post', async () => {
       const user = new User({
         username: 'wisecod',
-        name:'carl',
-        passwordHash: 'Cisco123'
+        name: 'carl',
+        passwordHash: 'Cisco123',
       })
       await user.save()
 
@@ -147,11 +147,13 @@ describe('When there is initially some blogs saved', () => {
         author: 'And that\'s awesome',
         url: 'asdasddsad',
         likes: 0,
-        user: user
+        user: user,
       })
       await newBlog.save()
 
-      await api.delete(`/api/blogs/${newBlog.id}`).set('Authorization',`Bearer ${token}`)
+      await api
+        .delete(`/api/blogs/${newBlog.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(204)
 
       const BlogsAtEnd = await helper.blogsInDB()
@@ -162,87 +164,87 @@ describe('When there is initially some blogs saved', () => {
     })
   })
 
-  describe('A PUT request',() => {
-    test('Can update a blog',async () => {
+  describe('A PUT request', () => {
+    test('Can update a blog', async () => {
       const initialBlogs = await helper.blogsInDB()
       const blogIdToUpdate = initialBlogs[0].id
       await api.put(`/api/blogs/${blogIdToUpdate}`).send({
-        title:'updated text',
-        author:'updated text',
-        url:'updated text',
-        likes:123
+        title: 'updated text',
+        author: 'updated text',
+        url: 'updated text',
+        likes: 123,
       })
 
       const response = await api.get(`/api/blogs/${blogIdToUpdate}`)
       const updatedBlog = response.body
 
-      assert.deepStrictEqual(updatedBlog,{
-        title:'updated text',
-        author:'updated text',
-        url:'updated text',
-        likes:123,
-        id:updatedBlog.id
+      assert.deepStrictEqual(updatedBlog, {
+        title: 'updated text',
+        author: 'updated text',
+        url: 'updated text',
+        likes: 123,
+        id: updatedBlog.id,
       })
     })
   })
 })
 
 describe('When saving new users', () => {
-  test('No provided password returns a 400 error',async() => {
+  test('No provided password returns a 400 error', async () => {
     const initialUsers = await helper.usersInDB()
 
     const noPassUser = {
       username: 'codewi',
-      name:'Carl'
+      name: 'Carl',
     }
     await api.post('/api/users').send(noPassUser).expect(400)
 
     const usersAtEnd = await helper.usersInDB()
-    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+    assert.strictEqual(initialUsers.length, usersAtEnd.length)
   })
-  test('No provided username returns a 400 error',async() => {
+  test('No provided username returns a 400 error', async () => {
     const initialUsers = await helper.usersInDB()
 
     const noUsernameUser = {
       password: 'cisco123',
-      name:'Carl'
+      name: 'Carl',
     }
     await api.post('/api/users').send(noUsernameUser).expect(400)
 
     const usersAtEnd = await helper.usersInDB()
-    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+    assert.strictEqual(initialUsers.length, usersAtEnd.length)
   })
-  test('Short password returns a 400 error',async() => {
+  test('Short password returns a 400 error', async () => {
     const initialUsers = await helper.usersInDB()
 
     const shortPassUser = {
       username: 'codewi',
       password: '12',
-      name:'Carl'
+      name: 'Carl',
     }
     await api.post('/api/users').send(shortPassUser).expect(400)
 
     const usersAtEnd = await helper.usersInDB()
-    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+    assert.strictEqual(initialUsers.length, usersAtEnd.length)
   })
-  test('Short username returns a 400 error',async() => {
+  test('Short username returns a 400 error', async () => {
     const initialUsers = await helper.usersInDB()
 
     const shortUsernameUser = {
       username: 'co',
       password: 'cisco123',
-      name:'Carl'
+      name: 'Carl',
     }
     await api.post('/api/users').send(shortUsernameUser).expect(400)
 
     const usersAtEnd = await helper.usersInDB()
-    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+    assert.strictEqual(initialUsers.length, usersAtEnd.length)
   })
-  test('Not Unique username returns a 400 error',async() => {
+  test('Not Unique username returns a 400 error', async () => {
     const existingUser = new User({
-      username:'carl',
-      name:'carlito',
-      passwordHash: 'hey1'
+      username: 'carl',
+      name: 'carlito',
+      passwordHash: 'hey1',
     })
     await existingUser.save()
 
@@ -251,13 +253,13 @@ describe('When saving new users', () => {
     const notUniqueUsernameUser = {
       username: 'carl',
       password: 'cisco123s',
-      name:'Carls'
+      name: 'Carls',
     }
     await api.post('/api/users').send(notUniqueUsernameUser).expect(400)
 
     const usersAtEnd = await helper.usersInDB()
 
-    assert.strictEqual(initialUsers.length,usersAtEnd.length)
+    assert.strictEqual(initialUsers.length, usersAtEnd.length)
   })
 })
 

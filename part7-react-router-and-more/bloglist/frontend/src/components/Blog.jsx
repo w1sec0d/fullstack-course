@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
-  const [detailsShown, setDetailsShown] = useState(false);
+  const [detailsShown, setDetailsShown] = useState(false)
 
   const toggleDetailsShown = () => {
-    setDetailsShown((previousState) => !previousState);
-  };
+    setDetailsShown((previousState) => !previousState)
+  }
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   return (
     <div style={blogStyle} className="blog">
@@ -28,10 +29,10 @@ const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
             </a>
           </p>
           <p data-testid={`likes_${value.title}`}>
-            Likes: {value.likes}{" "}
+            Likes: {value.likes}{' '}
             <button onClick={() => handleLike(value)}>Like</button>
           </p>
-          <p style={showRemove ? {} : { display: "none" }}>
+          <p style={showRemove ? {} : { display: 'none' }}>
             <button onClick={() => handleRemove(value)}>Remove</button>
           </p>
         </>
@@ -39,7 +40,18 @@ const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
         <button onClick={toggleDetailsShown}>View</button>
       )}
     </div>
-  );
-};
+  )
+}
+Blog.propTypes = {
+  value: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+  }).isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  showRemove: PropTypes.bool.isRequired,
+}
 
-export default Blog;
+export default Blog

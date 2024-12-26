@@ -158,53 +158,47 @@ describe('favorite blog', () => {
   })
 })
 
-describe('most blogs',() => {
+describe('most blogs', () => {
   test('of a list is the correct', () => {
     assert.strictEqual(
-      shallowEqualityCheck(
-        listHelper.mostBlogs(blogs),
-        {
-          author: 'Robert C. Martin',
-          blogs: 3
-        }
-      ),
+      shallowEqualityCheck(listHelper.mostBlogs(blogs), {
+        author: 'Robert C. Martin',
+        blogs: 3,
+      }),
       true
     )
   })
   test('of a list with many top bloggers is any of them', () => {
     let blogsCopy = [...blogs]
-    blogsCopy = blogsCopy.slice(0,-1)
+    blogsCopy = blogsCopy.slice(0, -1)
 
     const authorA = {
       author: 'Robert C. Martin',
-      blogs: 2
+      blogs: 2,
     }
     const authorB = {
       author: 'Edsger W. Dijkstra',
-      blogs: 2
+      blogs: 2,
     }
 
-    return listHelper.mostBlogs(blogsCopy) === authorA || listHelper.mostBlogs(blogsCopy) === authorB
+    return (
+      listHelper.mostBlogs(blogsCopy) === authorA ||
+      listHelper.mostBlogs(blogsCopy) === authorB
+    )
   })
 
-  test('of an empty list is null',() => {
-    assert.strictEqual(
-      listHelper.mostBlogs([]),
-      null
-    )
+  test('of an empty list is null', () => {
+    assert.strictEqual(listHelper.mostBlogs([]), null)
   })
 })
 
-describe('most likes',() => {
+describe('most likes', () => {
   test('of a list is the correct', () => {
     assert.strictEqual(
-      shallowEqualityCheck(
-        listHelper.mostLikes(blogs),
-        {
-          author: 'Edsger W. Dijkstra',
-          likes: 17
-        }
-      ),
+      shallowEqualityCheck(listHelper.mostLikes(blogs), {
+        author: 'Edsger W. Dijkstra',
+        likes: 17,
+      }),
       true
     )
   })
@@ -214,21 +208,21 @@ describe('most likes',() => {
 
     const authorA = {
       author: 'Robert C. Martin',
-      likes: 17
+      likes: 17,
     }
     const authorB = {
       author: 'Edsger W. Dijkstra',
-      likes: 17
+      likes: 17,
     }
 
-    return listHelper.mostLikes(blogsCopy) === authorA || listHelper.mostLikes(blogsCopy) === authorB
+    return (
+      listHelper.mostLikes(blogsCopy) === authorA ||
+      listHelper.mostLikes(blogsCopy) === authorB
+    )
   })
 
-  test('of an empty list is null',() => {
-    assert.strictEqual(
-      listHelper.mostLikes([]),
-      null
-    )
+  test('of an empty list is null', () => {
+    assert.strictEqual(listHelper.mostLikes([]), null)
   })
 })
 
