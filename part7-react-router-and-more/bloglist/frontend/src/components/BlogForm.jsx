@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
-import Swal from 'sweetalert2'
+import { setNotification } from '../state/NotificationSlice'
+import { useDispatch } from 'react-redux'
 
 const BlogForm = ({ creationHandler, setBlogs, user }) => {
   // Blog form state is only used in this component
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const dispatch = useDispatch()
 
   const handleCreation = async (event) => {
     event.preventDefault()
@@ -27,14 +29,12 @@ const BlogForm = ({ creationHandler, setBlogs, user }) => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      Swal.fire({
-        title: 'Blog created successfully',
-        icon: 'success',
-        timer: 4000,
-        toast: true,
-        showCloseButton: true,
-        position: 'top-right',
-      })
+      dispatch(
+        setNotification({
+          title: "Blog created successfully!",
+          timer: 1000
+        })
+      )
     }
   }
 

@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react'
-
-import Swal from 'sweetalert2'
-
+import { useDispatch } from 'react-redux'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
+import ToastNotification from './components/ToastNotification'
+import ConfirmationDialog from './components/ConfirmationDialog'
+import { setNotification, setConfirmation } from './state/NotificationSlice'
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
+  const [confirmationCallback, setConfirmationCallback] = useState(null)
+
+  const dispatch = useDispatch()
 
   async function fetchBlogs() {
     const fetchedBlogs = await blogService.getBlogs()
@@ -34,13 +38,9 @@ const App = () => {
   const handleLogOut = () => {
     window.localStorage.removeItem('bloglistAppUser')
     setUser(null)
-    Swal.fire({
-      title: 'Logged out successfully',
-      icon: 'success',
-      timer: 4000,
-      toast: true,
-      position: 'top-right',
-    })
+    dispatch(setNotification({
+      title: "Logged out successfully",
+    }))
   }
 
   const handleLike = async (blog) => {
@@ -60,29 +60,41 @@ const App = () => {
       )
       updatedBlogs[blogIndexToUpdate].likes += 1
       setBlogs(updatedBlogs)
+      dispatch(setNotification({
+        title: "Liked successfully!",
+        timer: 1000
+      }))
     }
   }
 
   const handleRemove = async (blog) => {
-    Swal.fire({
+    const onConfirm = async () => {
+      try {
+        await blogService.removeBlog(blog.id)
+        setBlogs((oldBlogs) =>
+          oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
+        )
+        dispatch(setNotification({
+          title: 'The blog has been deleted.',
+          icon: 'success'
+        }))
+      } catch {
+        dispatch(setNotification({
+          title: 'Failed to delete the blog.',
+          icon: 'error'
+        }))
+      }
+    }
+
+    setConfirmationCallback(() => onConfirm)
+
+    dispatch(setConfirmation({
       title: `Are you sure ?`,
       text: `Do you want to delete ${blog.title} blog?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      preConfirm: async () => {
-        try {
-          await blogService.removeBlog(blog.id)
-
-          setBlogs((oldBlogs) =>
-            oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
-          )
-          Swal.fire('Deleted!', 'The blog has been deleted.', 'success')
-        } catch {
-          Swal.fire('Error!', 'Failed to delete the blog.', 'error')
-        }
-      },
-    })
+      confirmButtonText: 'Yes, delete it!'
+    }))
   }
 
   if (user === null) {
@@ -90,6 +102,8 @@ const App = () => {
       <>
         <h2>Blogs</h2>
         <LoginForm setUser={setUser} />
+        <ToastNotification />
+        <ConfirmationDialog onConfirm={confirmationCallback} />
       </>
     )
   }
@@ -97,6 +111,8 @@ const App = () => {
   return (
     <>
       <h2>Blogs</h2>
+      <ToastNotification />
+      <ConfirmationDialog onConfirm={confirmationCallback} />
       <div>
         <p>
           Welcome <b>{user.username}</b>{' '}
@@ -118,7 +134,7 @@ const App = () => {
               value={blog}
               key={blog.id}
               handleLike={handleLike}
-              handleRemove={handleRemove}
+              handleRemove={() => handleRemove(blog)}
               showRemove={removeButtonShown}
             />
           )

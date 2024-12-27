@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ value, handleLike, handleRemove, showRemove }) => {
+const Blog = ({ value = {}, handleLike, handleRemove, showRemove }) => {
   const [detailsShown, setDetailsShown] = useState(false)
 
   const toggleDetailsShown = () => {
