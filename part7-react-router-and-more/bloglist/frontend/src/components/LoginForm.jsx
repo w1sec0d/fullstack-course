@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import login from '../services/login'
 import blogService from '../services/blogs'
-import Swal from 'sweetalert2'
-import PropTypes from 'prop-types'
+
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../state/NotificationSlice'
+import { setUser } from '../state/userSlice'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
@@ -18,9 +18,9 @@ const LoginForm = ({ setUser }) => {
       if (response) {
         window.localStorage.setItem('bloglistAppUser', JSON.stringify(response))
         blogService.setToken(response.token)
-        setUser(response)
         setUsername('')
         setPassword('')
+        dispatch(setUser(response))        
         dispatch(setNotification({
           title: 'Logged in successfully',
         }))
@@ -64,10 +64,6 @@ const LoginForm = ({ setUser }) => {
       </form>
     </>
   )
-}
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 }
 
 export default LoginForm

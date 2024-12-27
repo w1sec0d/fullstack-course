@@ -5,7 +5,7 @@ import { setNotification } from '../state/NotificationSlice'
 import { useDispatch } from 'react-redux'
 import { addBlog } from '../state/blogSlice'
 
-const BlogForm = ({ creationHandler, setBlogs, user }) => {
+const BlogForm = ({ creationHandler, user }) => {
   // Blog form state is only used in this component
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -84,7 +84,6 @@ const BlogForm = ({ creationHandler, setBlogs, user }) => {
 }
 BlogForm.propTypes = {
   creationHandler: PropTypes.func,
-  setBlogs: PropTypes.func.isRequired,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

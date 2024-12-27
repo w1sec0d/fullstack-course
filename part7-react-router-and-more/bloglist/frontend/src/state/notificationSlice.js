@@ -9,13 +9,13 @@ const notificationSlice = createSlice({
     initialState,
     reducers: {
         setNotification(state, action) {
-            return { ...state, ...action.payload }
+            return action.payload
         },
         clearNotification() {
             return initialState
         },
         setConfirmation(state, action) {
-            return { ...state, ...action.payload, isConfirmation: true }
+            return { ...action.payload, isConfirmation: true }
         },
         clearConfirmation() {
             return { ...initialState, isConfirmation: false }

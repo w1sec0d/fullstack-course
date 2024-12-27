@@ -18,13 +18,13 @@ import { useDispatch, useSelector } from 'react-redux'
 // Sorting logic 
 import { sortBlogsByLikes } from './utils/blogSorting'
 import { deleteBlog, likeBlog, setBlogs } from './state/blogSlice'
+import { clearUser, setUser } from './state/userSlice'
 
 const App = () => {
-  const [user, setUser] = useState(null)
   const [confirmationCallback, setConfirmationCallback] = useState(null)
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
-  
+  const user = useSelector((state) => state.user)  
 
   useEffect(() => {
     async function fetchBlogs() {
@@ -40,14 +40,14 @@ const App = () => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')
     if (savedUser) {
       const user = JSON.parse(savedUser)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogOut = () => {
     window.localStorage.removeItem('bloglistAppUser')
-    setUser(null)
+    dispatch(clearUser())
     dispatch(setNotification({
       title: "Logged out successfully",
     }))
@@ -104,7 +104,7 @@ const App = () => {
     return (
       <>
         <h2>Blogs</h2>
-        <LoginForm setUser={setUser} />
+        <LoginForm />
         <ToastNotification />
         <ConfirmationDialog onConfirm={confirmationCallback} />
       </>
@@ -123,7 +123,7 @@ const App = () => {
         </p>
         <hr />
         <Togglable buttonLabel="New Blog">
-          <BlogForm setBlogs={setBlogs} user={user} />
+          <BlogForm user={user} />
         </Togglable>
 
         {blogs.map((blog) => {
