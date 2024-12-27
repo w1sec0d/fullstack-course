@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // Sorting logic 
 import { sortBlogsByLikes } from './utils/blogSorting'
-import { setBlogs } from './state/blogSlice'
+import { deleteBlog, likeBlog, setBlogs } from './state/blogSlice'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -30,7 +30,6 @@ const App = () => {
     async function fetchBlogs() {
       const fetchedBlogs = await blogService.getBlogs()
       const sortedBlogs = sortBlogsByLikes(fetchedBlogs)
-      console.log({sortedBlogs});
       
       dispatch(setBlogs(sortedBlogs))
     }
@@ -65,12 +64,7 @@ const App = () => {
 
     const updatedBlog = await blogService.updateBlog(blog.id, putRequestObject)
     if (updatedBlog) {
-      let updatedBlogs = [...blogs]
-      const blogIndexToUpdate = updatedBlogs.findIndex(
-        (oldBlog) => oldBlog.id === blog.id
-      )
-      updatedBlogs[blogIndexToUpdate].likes += 1
-      setBlogs(updatedBlogs)
+      dispatch(likeBlog(blog.id))
       dispatch(setNotification({
         title: "Liked successfully!",
         timer: 1000
@@ -82,9 +76,7 @@ const App = () => {
     const onConfirm = async () => {
       try {
         await blogService.removeBlog(blog.id)
-        setBlogs((oldBlogs) =>
-          oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
-        )
+        dispatch(deleteBlog(blog.id))
         dispatch(setNotification({
           title: 'The blog has been deleted.',
           icon: 'success'
