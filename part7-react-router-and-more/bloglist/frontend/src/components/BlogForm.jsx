@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 import { setNotification } from '../state/NotificationSlice'
 import { useDispatch } from 'react-redux'
+import { addBlog } from '../state/blogSlice'
 
 const BlogForm = ({ creationHandler, setBlogs, user }) => {
   // Blog form state is only used in this component
@@ -25,7 +26,7 @@ const BlogForm = ({ creationHandler, setBlogs, user }) => {
     }
 
     if (request) {
-      setBlogs((blogs) => blogs.concat(newRequest))
+      dispatch(addBlog(newRequest))
       setTitle('')
       setAuthor('')
       setUrl('')

@@ -1,30 +1,41 @@
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+
+// Components
 import LoginForm from './components/LoginForm'
-import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import ToastNotification from './components/ToastNotification'
 import ConfirmationDialog from './components/ConfirmationDialog'
+
+// Services
+import blogService from './services/blogs'
+
+// State Logic
 import { setNotification, setConfirmation } from './state/NotificationSlice'
+import { useDispatch, useSelector } from 'react-redux'
+
+// Sorting logic 
+import { sortBlogsByLikes } from './utils/blogSorting'
+import { setBlogs } from './state/blogSlice'
 
 const App = () => {
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
   const [confirmationCallback, setConfirmationCallback] = useState(null)
-
   const dispatch = useDispatch()
-
-  async function fetchBlogs() {
-    const fetchedBlogs = await blogService.getBlogs()
-    const sortedBlogs = [...fetchedBlogs].sort((a, b) => b.likes - a.likes)
-    setBlogs(sortedBlogs)
-  }
+  const blogs = useSelector((state) => state.blogs)
+  
 
   useEffect(() => {
+    async function fetchBlogs() {
+      const fetchedBlogs = await blogService.getBlogs()
+      const sortedBlogs = sortBlogsByLikes(fetchedBlogs)
+      console.log({sortedBlogs});
+      
+      dispatch(setBlogs(sortedBlogs))
+    }
     fetchBlogs()
-  }, [])
+  },[dispatch])
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import { clearConfirmation } from '../state/NotificationSlice'
@@ -25,6 +26,9 @@ const ConfirmationDialog = ({ onConfirm }) => {
   }, [notification, dispatch, onConfirm])
 
   return null
+}
+ConfirmationDialog.propTypes = {
+  onConfirm: PropTypes.func,
 }
 
 export default ConfirmationDialog
