@@ -1,16 +1,13 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
-import { setNotification } from '../state/NotificationSlice'
-import { useDispatch } from 'react-redux'
-import { addBlog } from '../state/blogSlice'
+import Swal from 'sweetalert2'
 
-const BlogForm = ({ creationHandler, user }) => {
+const BlogForm = ({ creationHandler, setBlogs, user }) => {
   // Blog form state is only used in this component
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const dispatch = useDispatch()
 
   const handleCreation = async (event) => {
     event.preventDefault()
@@ -26,16 +23,18 @@ const BlogForm = ({ creationHandler, user }) => {
     }
 
     if (request) {
-      dispatch(addBlog(newRequest))
+      setBlogs((blogs) => blogs.concat(newRequest))
       setTitle('')
       setAuthor('')
       setUrl('')
-      dispatch(
-        setNotification({
-          title: "Blog created successfully!",
-          timer: 1000
-        })
-      )
+      Swal.fire({
+        title: 'Blog created successfully',
+        icon: 'success',
+        timer: 4000,
+        toast: true,
+        showCloseButton: true,
+        position: 'top-right',
+      })
     }
   }
 
@@ -84,6 +83,7 @@ const BlogForm = ({ creationHandler, user }) => {
 }
 BlogForm.propTypes = {
   creationHandler: PropTypes.func,
+  setBlogs: PropTypes.func.isRequired,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

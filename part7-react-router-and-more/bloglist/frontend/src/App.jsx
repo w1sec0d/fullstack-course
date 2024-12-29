@@ -1,56 +1,46 @@
 import { useState, useEffect } from 'react'
 
-// Components
+import Swal from 'sweetalert2'
+
 import LoginForm from './components/LoginForm'
+import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
-import ToastNotification from './components/ToastNotification'
-import ConfirmationDialog from './components/ConfirmationDialog'
-
-// Services
-import blogService from './services/blogs'
-
-// State Logic
-import { setNotification, setConfirmation } from './state/NotificationSlice'
-import { useDispatch, useSelector } from 'react-redux'
-
-// Sorting logic 
-import { sortBlogsByLikes } from './utils/blogSorting'
-import { deleteBlog, likeBlog, setBlogs } from './state/blogSlice'
-import { clearUser, setUser } from './state/userSlice'
 
 const App = () => {
-  const [confirmationCallback, setConfirmationCallback] = useState(null)
-  const dispatch = useDispatch()
-  const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.user)  
+  const [user, setUser] = useState(null)
+  const [blogs, setBlogs] = useState([])
+
+  async function fetchBlogs() {
+    const fetchedBlogs = await blogService.getBlogs()
+    const sortedBlogs = [...fetchedBlogs].sort((a, b) => b.likes - a.likes)
+    setBlogs(sortedBlogs)
+  }
 
   useEffect(() => {
-    async function fetchBlogs() {
-      const fetchedBlogs = await blogService.getBlogs()
-      const sortedBlogs = sortBlogsByLikes(fetchedBlogs)
-      
-      dispatch(setBlogs(sortedBlogs))
-    }
     fetchBlogs()
-  },[dispatch])
+  }, [])
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')
     if (savedUser) {
       const user = JSON.parse(savedUser)
-      dispatch(setUser(user))
+      setUser(user)
       blogService.setToken(user.token)
     }
-  }, [dispatch])
+  }, [])
 
   const handleLogOut = () => {
     window.localStorage.removeItem('bloglistAppUser')
-    dispatch(clearUser())
-    dispatch(setNotification({
-      title: "Logged out successfully",
-    }))
+    setUser(null)
+    Swal.fire({
+      title: 'Logged out successfully',
+      icon: 'success',
+      timer: 4000,
+      toast: true,
+      position: 'top-right',
+    })
   }
 
   const handleLike = async (blog) => {
@@ -64,49 +54,42 @@ const App = () => {
 
     const updatedBlog = await blogService.updateBlog(blog.id, putRequestObject)
     if (updatedBlog) {
-      dispatch(likeBlog(blog.id))
-      dispatch(setNotification({
-        title: "Liked successfully!",
-        timer: 1000
-      }))
+      let updatedBlogs = [...blogs]
+      const blogIndexToUpdate = updatedBlogs.findIndex(
+        (oldBlog) => oldBlog.id === blog.id
+      )
+      updatedBlogs[blogIndexToUpdate].likes += 1
+      setBlogs(updatedBlogs)
     }
   }
 
   const handleRemove = async (blog) => {
-    const onConfirm = async () => {
-      try {
-        await blogService.removeBlog(blog.id)
-        dispatch(deleteBlog(blog.id))
-        dispatch(setNotification({
-          title: 'The blog has been deleted.',
-          icon: 'success'
-        }))
-      } catch {
-        dispatch(setNotification({
-          title: 'Failed to delete the blog.',
-          icon: 'error'
-        }))
-      }
-    }
-
-    setConfirmationCallback(() => onConfirm)
-
-    dispatch(setConfirmation({
+    Swal.fire({
       title: `Are you sure ?`,
       text: `Do you want to delete ${blog.title} blog?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!'
-    }))
+      confirmButtonText: 'Yes, delete it!',
+      preConfirm: async () => {
+        try {
+          await blogService.removeBlog(blog.id)
+
+          setBlogs((oldBlogs) =>
+            oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
+          )
+          Swal.fire('Deleted!', 'The blog has been deleted.', 'success')
+        } catch {
+          Swal.fire('Error!', 'Failed to delete the blog.', 'error')
+        }
+      },
+    })
   }
 
   if (user === null) {
     return (
       <>
         <h2>Blogs</h2>
-        <LoginForm />
-        <ToastNotification />
-        <ConfirmationDialog onConfirm={confirmationCallback} />
+        <LoginForm setUser={setUser} />
       </>
     )
   }
@@ -114,8 +97,6 @@ const App = () => {
   return (
     <>
       <h2>Blogs</h2>
-      <ToastNotification />
-      <ConfirmationDialog onConfirm={confirmationCallback} />
       <div>
         <p>
           Welcome <b>{user.username}</b>{' '}
@@ -123,7 +104,7 @@ const App = () => {
         </p>
         <hr />
         <Togglable buttonLabel="New Blog">
-          <BlogForm user={user} />
+          <BlogForm setBlogs={setBlogs} user={user} />
         </Togglable>
 
         {blogs.map((blog) => {
@@ -137,7 +118,7 @@ const App = () => {
               value={blog}
               key={blog.id}
               handleLike={handleLike}
-              handleRemove={() => handleRemove(blog)}
+              handleRemove={handleRemove}
               showRemove={removeButtonShown}
             />
           )
