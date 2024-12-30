@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
-import { clearConfirmation } from '../state/NotificationSlice'
+import { useAppContext } from '../state/useAppContext'
 
 const ConfirmationDialog = ({ onConfirm }) => {
-  const notification = useSelector((state) => state.notification)
-  const dispatch = useDispatch()
+  const {state, dispatch} = useAppContext()
+  const notification = state.notification
 
   useEffect(() => {
     if (notification.isConfirmation) {
@@ -15,12 +14,15 @@ const ConfirmationDialog = ({ onConfirm }) => {
         text: notification.text,
         icon: notification.icon ?? 'warning',
         showCancelButton: notification.showCancelButton ?? true,
-        confirmButtonText: notification.confirmButtonText ?? 'Yes'
+        confirmButtonText: notification.confirmButtonText ?? 'Yes',
+        toast:false
       }).then((result) => {
         if (result.isConfirmed && onConfirm) {
           onConfirm()
         }
-        dispatch(clearConfirmation())
+        dispatch({
+          type:"CLEAR_NOTIFICATION"
+        })
       })
     }
   }, [notification, dispatch, onConfirm])

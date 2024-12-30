@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import login from '../services/login'
 import blogService from '../services/blogs'
-import Swal from 'sweetalert2'
 import PropTypes from 'prop-types'
+import { useAppContext } from '../state/useAppContext'
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const {dispatch} = useAppContext()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -18,23 +19,30 @@ const LoginForm = ({ setUser }) => {
         setUser(response)
         setUsername('')
         setPassword('')
-        Swal.fire({
-          title: 'Logged in successfully',
-          icon: 'success',
-          timer: 4000,
-          toast: true,
-          position: 'top-right',
+
+        dispatch({
+          type: "SET_NOTIFICATION",
+          payload: {
+            title: 'Logged in successfully',
+            icon: 'success',
+            timer: 4000,
+            toast: true,
+            position: 'top-right',
+          }
         })
       }
     } catch (error) {
       console.error('Login failed', error)
-      Swal.fire({
-        title: 'Login failed',
-        text: 'Wrong username/password. Please try again',
-        icon: 'error',
-        toast: true,
-        showCloseButton: true,
-        position: 'top-right',
+      dispatch({
+        type: "SET_NOTIFICATION",
+        payload: {
+          title: 'Login failed',
+          text: 'Wrong username/password. Please try again',
+          icon: 'error',
+          toast: true,
+          showCloseButton: true,
+          position: 'top-right',
+        }
       })
     }
   }

@@ -5,7 +5,7 @@ const initialState = {
 const notificationReducer = (state, action) => {
     switch (action.type) {
         case 'SET_NOTIFICATION':
-            return {notification: action.notification}
+            return action.payload
 
         case 'CLEAR_NOTIFICATION':
             return initialState

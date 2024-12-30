@@ -4,7 +4,6 @@ import blogService from '../services/blogs'
 import Swal from 'sweetalert2'
 
 const BlogForm = ({ creationHandler, setBlogs, user }) => {
-  // Blog form state is only used in this component
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')

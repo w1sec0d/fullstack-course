@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
-import { createContext, useReducer, useContext } from 'react';
+import { createContext, useReducer } from 'react';
 import { initialState, rootReducer } from './reducers/rootReducer';
 
-const AppContext = createContext()
-
-export const useAppContext = () => useContext(AppContext)
+export const AppContext = createContext()
 
 export const AppProvider = ({children}) => {
     const [state, dispatch] = useReducer(rootReducer, initialState)

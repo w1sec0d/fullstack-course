@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
-import { clearNotification } from '../state/NotificationSlice'
+import { useEffect } from 'react'
+import { useAppContext } from '../state/useAppContext'
 
 const ToastNotification = () => {
-  const notification = useSelector((state)=> state.notification)
-  const dispatch = useDispatch()
+  const {state, dispatch} = useAppContext()
+  const notification = state.notification
+  console.log({notification});
   
   useEffect(()=>{
     if(notification.title && !notification.isConfirmation){    
@@ -18,8 +18,11 @@ const ToastNotification = () => {
           position: notification.position ?? 'top-right',
           showConfirmButton: false
         }).then(() => {
-        dispatch(clearNotification())
-      })
+          dispatch({
+            type:"CLEAR_NOTIFICATION"
+          })
+        }
+      )
     }
   }, [notification, dispatch])
 
