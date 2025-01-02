@@ -6,10 +6,13 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../state/NotificationSlice'
 import { setUser } from '../state/userSlice'
 
+import { useNavigate } from 'react-router-dom'
+
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -17,13 +20,14 @@ const LoginForm = () => {
       const response = await login({ username, password })
       if (response) {
         window.localStorage.setItem('bloglistAppUser', JSON.stringify(response))
-        blogService.setToken(response.token)
+        await blogService.setToken(response.token)
         setUsername('')
         setPassword('')
         dispatch(setUser(response))        
         dispatch(setNotification({
           title: 'Logged in successfully',
         }))
+        navigate('/')
       }
     } catch (error) {
       console.error('Login failed', error)
