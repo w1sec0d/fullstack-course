@@ -13,28 +13,23 @@ import { useAppContext } from './state/useAppContext'
 import useFetchData from './hooks/useFetchData'
 import { sortBlogsByLikes } from './utils/blogSorting'
 import useMutateBlog from './hooks/useMutateBlog'
-import { QueryClient } from '@tanstack/react-query'
 
 const App = () => {
   const { state, dispatch } = useAppContext()
+  const [user, setUser] = useState(null)
   const [confirmationCallback, setConfirmationCallback] = useState(null)
   const { data, error, isLoading } = useFetchData()
   const updateBlogMutation = useMutateBlog(blogService.updateBlog)
   const deleteBlogMutation = useMutateBlog(blogService.removeBlog)
-  console.log({state});
-  
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')
     if (savedUser) {
-      let userToSave = JSON.parse(savedUser)
-      dispatch({
-        type:'SET_USER',
-        payload: userToSave
-      })
-      blogService.setToken(userToSave.token)
+      const user = JSON.parse(savedUser)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     if (data) {
@@ -48,7 +43,7 @@ const App = () => {
 
   const handleLogOut = () => {
     window.localStorage.removeItem('bloglistAppUser')
-    dispatch({type:'CLEAR_USER'})
+    setUser(null)
     dispatch({
       type: 'SET_NOTIFICATION',
       payload: {
@@ -78,11 +73,6 @@ const App = () => {
             title: 'Liked :)',
           },
         })
-        QueryClient.setQueryData(['blogs'], (oldData) => {
-          return oldData.map((b) =>
-            b.id === blog.id ? { ...b, likes: data.likes } : b
-          );
-        });
       }
     })
   }
@@ -131,11 +121,11 @@ const App = () => {
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
-  if (!state.user.username) {
+  if (user === null) {
     return (
       <>
         <h2>Blogs</h2>
-        <LoginForm />
+        <LoginForm setUser={setUser} />
         <ToastNotification />
         <ConfirmationDialog onConfirm={confirmationCallback} />
       </>
@@ -147,17 +137,17 @@ const App = () => {
       <h2>Blogs</h2>
       <div>
         <p>
-          Welcome <b>{state.user.username}</b>{' '}
+          Welcome <b>{user.username}</b>{' '}
           <button onClick={handleLogOut}>Log Out</button>
         </p>
         <hr />
         <Togglable buttonLabel="New Blog">
-          <BlogForm user={state.user} />
+          <BlogForm user={user} />
         </Togglable>
         {state.blogs.map((blog) => {
           let removeButtonShown = false
           if (blog.user) {
-            removeButtonShown = blog.user.username === state.user.username
+            removeButtonShown = blog.user.username === user.username
           }
 
           return (
