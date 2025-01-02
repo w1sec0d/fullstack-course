@@ -1,51 +1,58 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
-import Swal from 'sweetalert2'
-import { useAppContext } from '../state/useAppContext'
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import blogService from '../services/blogs';
+import { useAppContext } from '../state/useAppContext';
+import useMutateBlog from '../hooks/useMutateBlog';
 
 const BlogForm = ({ creationHandler, user }) => {
-  const {state, dispatch} = useAppContext()
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const { dispatch } = useAppContext();
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const newBlogMutation = useMutateBlog(blogService.createBlog)
 
   const handleCreation = async (event) => {
-    event.preventDefault()
-    const request = await blogService.createBlog({ title, author, url })
-    const userId = request.user
-    let newRequest = { ...request }
+    event.preventDefault();
+    newBlogMutation.mutate(
+      { title, author, url },
+      {
+        onSuccess: (data) => {
+          console.log('Blog created:', data);
+          const userId = data.user;
+          let newRequest = { ...data };
 
-    // Adds user info to locally added blog
-    newRequest.user = {
-      id: userId,
-      username: user.username,
-      name: user.name,
-    }
+          // Adds user info to locally added blog
+          newRequest.user = {
+            id: userId,
+            username: user.username,
+            name: user.name,
+          };
 
-    if (request) {
-      dispatch(
-        {
-          type: 'ADD_BLOG',
-          payload: newRequest
-        }
-      )
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      dispatch({
-        type: 'SET_NOTIFICATION',
-        payload: {
-          title: 'Blog created successfully',
-          icon: 'success',
-          timer: 4000,
-          toast: true,
-          showCloseButton: true,
-          position: 'top-right',
-        }
-      })
-    }
-  }
+          dispatch({
+            type: 'ADD_BLOG',
+            payload: newRequest,
+          });
+
+          setTitle('');
+          setAuthor('');
+          setUrl('');
+
+          dispatch({
+            type: 'SET_NOTIFICATION',
+            payload: {
+              title: 'Blog created successfully',
+              icon: 'success',
+              timer: 4000,
+              toast: true,
+              showCloseButton: true,
+              position: 'top-right',
+            },
+          });
+        },
+      }
+    );
+  };
 
   return (
     <form
@@ -88,14 +95,15 @@ const BlogForm = ({ creationHandler, user }) => {
       </div>
       <button type="submit">Save</button>
     </form>
-  )
-}
+  );
+};
+
 BlogForm.propTypes = {
   creationHandler: PropTypes.func,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
-}
+};
 
-export default BlogForm
+export default BlogForm;
