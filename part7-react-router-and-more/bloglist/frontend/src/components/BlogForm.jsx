@@ -2,8 +2,10 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 import Swal from 'sweetalert2'
+import { useAppContext } from '../state/useAppContext'
 
-const BlogForm = ({ creationHandler, setBlogs, user }) => {
+const BlogForm = ({ creationHandler, user }) => {
+  const {state, dispatch} = useAppContext()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -22,17 +24,25 @@ const BlogForm = ({ creationHandler, setBlogs, user }) => {
     }
 
     if (request) {
-      setBlogs((blogs) => blogs.concat(newRequest))
+      dispatch(
+        {
+          type: 'ADD_BLOG',
+          payload: newRequest
+        }
+      )
       setTitle('')
       setAuthor('')
       setUrl('')
-      Swal.fire({
-        title: 'Blog created successfully',
-        icon: 'success',
-        timer: 4000,
-        toast: true,
-        showCloseButton: true,
-        position: 'top-right',
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        payload: {
+          title: 'Blog created successfully',
+          icon: 'success',
+          timer: 4000,
+          toast: true,
+          showCloseButton: true,
+          position: 'top-right',
+        }
       })
     }
   }
@@ -82,7 +92,6 @@ const BlogForm = ({ creationHandler, setBlogs, user }) => {
 }
 BlogForm.propTypes = {
   creationHandler: PropTypes.func,
-  setBlogs: PropTypes.func.isRequired,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

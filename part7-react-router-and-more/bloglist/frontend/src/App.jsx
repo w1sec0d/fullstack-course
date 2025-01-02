@@ -5,26 +5,29 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import ToastNotification from './components/ToastNotification'
-
-import blogService from './services/blogs'
-import { useAppContext } from './state/useAppContext'
 import ConfirmationDialog from './components/ConfirmationDialog'
 
+import blogService from './services/blogs'
+
+import { useAppContext } from './state/useAppContext'
+import useFetchData from './hooks/useFetchData'
+import { sortBlogsByLikes } from './utils/blogSorting'
+
 const App = () => {
-  const {dispatch} = useAppContext()
+  const {state, dispatch} = useAppContext()
   const [user, setUser] = useState(null)
   const [confirmationCallback, setConfirmationCallback] = useState(null)
-  const [blogs, setBlogs] = useState([])
-
-  async function fetchBlogs() {
-    const fetchedBlogs = await blogService.getBlogs()
-    const sortedBlogs = [...fetchedBlogs].sort((a, b) => b.likes - a.likes)
-    setBlogs(sortedBlogs)
-  }
+  const {data, error, isLoading} = useFetchData();
 
   useEffect(() => {
-    fetchBlogs()
-  }, [])
+    if (data){
+      const sortedBlogs = sortBlogsByLikes(data)
+      dispatch({
+        type: 'SET_BLOGS',
+        payload: sortedBlogs
+      })
+    }
+  }, [data, dispatch])
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')
@@ -61,12 +64,12 @@ const App = () => {
 
     const updatedBlog = await blogService.updateBlog(blog.id, putRequestObject)
     if (updatedBlog) {
-      let updatedBlogs = [...blogs]
+      let updatedBlogs = state.blogs
       const blogIndexToUpdate = updatedBlogs.findIndex(
         (oldBlog) => oldBlog.id === blog.id
       )
       updatedBlogs[blogIndexToUpdate].likes += 1
-      setBlogs(updatedBlogs)
+
       dispatch({
         type: 'SET_NOTIFICATION',
         payload: {
@@ -82,9 +85,9 @@ const App = () => {
       try {
         await blogService.removeBlog(blog.id)
 
-        setBlogs((oldBlogs) =>
-          oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
-        )
+        // setBlogs((oldBlogs) =>
+        //   oldBlogs.filter((oldBlog) => oldBlog.id != blog.id)
+        // )
 
         dispatch({
           type: 'SET_NOTIFICATION',
@@ -121,6 +124,9 @@ const App = () => {
     })
   }
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   if (user === null) {
     return (
       <>
@@ -142,9 +148,9 @@ const App = () => {
         </p>
         <hr />
         <Togglable buttonLabel="New Blog">
-          <BlogForm setBlogs={setBlogs} user={user} />
+          <BlogForm user={user}/>
         </Togglable>
-        {blogs.map((blog) => {
+        {state.blogs.map((blog) => {
           let removeButtonShown = false
           if (blog.user) {
             removeButtonShown = blog.user.username === user.username

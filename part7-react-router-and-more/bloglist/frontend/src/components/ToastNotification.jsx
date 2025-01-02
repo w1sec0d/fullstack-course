@@ -5,7 +5,6 @@ import { useAppContext } from '../state/useAppContext'
 const ToastNotification = () => {
   const {state, dispatch} = useAppContext()
   const notification = state.notification
-  console.log({notification});
   
   useEffect(()=>{
     if(notification.title && !notification.isConfirmation){    
