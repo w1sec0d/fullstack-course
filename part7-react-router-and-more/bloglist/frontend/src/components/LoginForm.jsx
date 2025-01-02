@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import login from '../services/login'
 import blogService from '../services/blogs'
-import PropTypes from 'prop-types'
-import { useAppContext } from '../state/useAppContext'
 
-const LoginForm = ({ setUser }) => {
+import { useDispatch } from 'react-redux'
+import { setNotification } from '../state/NotificationSlice'
+import { setUser } from '../state/userSlice'
+
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const {dispatch} = useAppContext()
+  const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -16,34 +18,20 @@ const LoginForm = ({ setUser }) => {
       if (response) {
         window.localStorage.setItem('bloglistAppUser', JSON.stringify(response))
         blogService.setToken(response.token)
-        setUser(response)
         setUsername('')
         setPassword('')
-
-        dispatch({
-          type: "SET_NOTIFICATION",
-          payload: {
-            title: 'Logged in successfully',
-            icon: 'success',
-            timer: 4000,
-            toast: true,
-            position: 'top-right',
-          }
-        })
+        dispatch(setUser(response))        
+        dispatch(setNotification({
+          title: 'Logged in successfully',
+        }))
       }
     } catch (error) {
       console.error('Login failed', error)
-      dispatch({
-        type: "SET_NOTIFICATION",
-        payload: {
-          title: 'Login failed',
-          text: 'Wrong username/password. Please try again',
-          icon: 'error',
-          toast: true,
-          showCloseButton: true,
-          position: 'top-right',
-        }
-      })
+      dispatch(setNotification({
+        title: 'Login failed',
+        text: 'Wrong username/password or no service at the moment. Please try again',
+        icon: 'error',
+      }))
     }
   }
   return (
@@ -76,10 +64,6 @@ const LoginForm = ({ setUser }) => {
       </form>
     </>
   )
-}
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 }
 
 export default LoginForm
