@@ -4,7 +4,7 @@ import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 import { useAppContext } from '../state/useAppContext'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const {dispatch} = useAppContext()
@@ -16,7 +16,10 @@ const LoginForm = ({ setUser }) => {
       if (response) {
         window.localStorage.setItem('bloglistAppUser', JSON.stringify(response))
         blogService.setToken(response.token)
-        setUser(response)
+        dispatch({
+          type: 'SET_USER',
+          payload: response
+        })
         setUsername('')
         setPassword('')
 
@@ -76,10 +79,6 @@ const LoginForm = ({ setUser }) => {
       </form>
     </>
   )
-}
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 }
 
 export default LoginForm

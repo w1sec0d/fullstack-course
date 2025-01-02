@@ -100,10 +100,7 @@ const BlogForm = ({ creationHandler, user }) => {
 
 BlogForm.propTypes = {
   creationHandler: PropTypes.func,
-  user: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+  user: PropTypes.object
 };
 
 export default BlogForm;
