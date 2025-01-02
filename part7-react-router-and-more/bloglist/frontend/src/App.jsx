@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 
 // Components
 import LoginForm from './components/LoginForm'
@@ -17,24 +18,59 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // Sorting logic 
 import { sortBlogsByLikes } from './utils/blogSorting'
-import { deleteBlog, likeBlog, setBlogs } from './state/blogSlice'
+import { setBlogs } from './state/blogSlice'
 import { clearUser, setUser } from './state/userSlice'
 
 const App = () => {
   const [confirmationCallback, setConfirmationCallback] = useState(null)
   const dispatch = useDispatch()
-  const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)  
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    async function fetchBlogs() {
-      const fetchedBlogs = await blogService.getBlogs()
-      const sortedBlogs = sortBlogsByLikes(fetchedBlogs)
-      
+  const { data: blogs, isLoading, isError } = useQuery('blogs', blogService.getBlogs, {
+    onSuccess: (data) => {
+      const sortedBlogs = sortBlogsByLikes(data)
       dispatch(setBlogs(sortedBlogs))
+    },
+    onError: () => {
+      dispatch(setNotification({
+        title: 'Failed to fetch blogs',
+        icon: 'error'
+      }))
     }
-    fetchBlogs()
-  },[dispatch])
+  })
+
+  const likeMutation = useMutation(blogService.updateBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+      dispatch(setNotification({
+        title: "Liked successfully!",
+        timer: 1000
+      }))
+    },
+    onError: () => {
+      dispatch(setNotification({
+        title: 'Failed to like the blog.',
+        icon: 'error'
+      }))
+    }
+  })
+
+  const removeMutation = useMutation(blogService.removeBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+      dispatch(setNotification({
+        title: 'The blog has been deleted.',
+        icon: 'success'
+      }))
+    },
+    onError: () => {
+      dispatch(setNotification({
+        title: 'Failed to delete the blog.',
+        icon: 'error'
+      }))
+    }
+  })
 
   useEffect(() => {
     const savedUser = window.localStorage.getItem('bloglistAppUser')
@@ -53,7 +89,7 @@ const App = () => {
     }))
   }
 
-  const handleLike = async (blog) => {
+  const handleLike = (blog) => {
     const putRequestObject = {
       user: blog.user.id,
       likes: blog.likes + 1,
@@ -62,31 +98,12 @@ const App = () => {
       url: blog.url,
     }
 
-    const updatedBlog = await blogService.updateBlog(blog.id, putRequestObject)
-    if (updatedBlog) {
-      dispatch(likeBlog(blog.id))
-      dispatch(setNotification({
-        title: "Liked successfully!",
-        timer: 1000
-      }))
-    }
+    likeMutation.mutate({ id: blog.id, blog: putRequestObject })
   }
 
-  const handleRemove = async (blog) => {
-    const onConfirm = async () => {
-      try {
-        await blogService.removeBlog(blog.id)
-        dispatch(deleteBlog(blog.id))
-        dispatch(setNotification({
-          title: 'The blog has been deleted.',
-          icon: 'success'
-        }))
-      } catch {
-        dispatch(setNotification({
-          title: 'Failed to delete the blog.',
-          icon: 'error'
-        }))
-      }
+  const handleRemove = (blog) => {
+    const onConfirm = () => {
+      removeMutation.mutate(blog.id)
     }
 
     setConfirmationCallback(() => onConfirm)
@@ -98,6 +115,14 @@ const App = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!'
     }))
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Error loading blogs</div>
   }
 
   if (user === null) {
