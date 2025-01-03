@@ -36,21 +36,36 @@ const Navbar = () => {
   return (
     <>
       <h2>Blogs</h2>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Blogs</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
-        </ul>
-      </nav>
-      <p>
-        Welcome <b>{user.username}</b>{' '}
-        <button onClick={handleLogOut}>Log Out</button>
-      </p>
-      <hr />
+      <div
+        style={{
+          background: 'lightgray',
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
+        <nav>
+          <ul
+            style={{
+              textDecoration: 'none',
+              display: 'flex',
+              flexDirection: 'row',
+              gap: '20px',
+              listStyleType: 'none',
+            }}
+          >
+            <li>
+              <Link to="/">Blogs</Link>
+            </li>
+            <li>
+              <Link to="/users">Users</Link>
+            </li>
+          </ul>
+        </nav>
+        <p style={{ marginLeft: '20px' }}>
+          Welcome <b>{user.username}</b>{' '}
+          <button onClick={handleLogOut}>Log Out</button>
+        </p>
+      </div>
     </>
   )
 }
