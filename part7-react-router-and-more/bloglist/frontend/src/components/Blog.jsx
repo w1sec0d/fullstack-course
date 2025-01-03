@@ -1,13 +1,7 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ value = {}, handleLike, handleRemove, showRemove }) => {
-  const [detailsShown, setDetailsShown] = useState(false)
-
-  const toggleDetailsShown = () => {
-    setDetailsShown((previousState) => !previousState)
-  }
-
+const Blog = ({ value = {} }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -18,27 +12,9 @@ const Blog = ({ value = {}, handleLike, handleRemove, showRemove }) => {
 
   return (
     <div style={blogStyle} className="blog">
-      <p>{value.title}</p>
-      <p>{value.author}</p>
-      {detailsShown ? (
-        <>
-          <button onClick={toggleDetailsShown}>Hide</button>
-          <p>
-            <a href={value.url} target="_BLANK">
-              {value.url}
-            </a>
-          </p>
-          <p data-testid={`likes_${value.title}`}>
-            Likes: {value.likes}{' '}
-            <button onClick={() => handleLike(value)}>Like</button>
-          </p>
-          <p style={showRemove ? {} : { display: 'none' }}>
-            <button onClick={() => handleRemove(value)}>Remove</button>
-          </p>
-        </>
-      ) : (
-        <button onClick={toggleDetailsShown}>View</button>
-      )}
+      <Link to={`/blogs/${value.id}`}>
+        <p>{value.title}</p>
+      </Link>
     </div>
   )
 }
@@ -49,9 +25,6 @@ Blog.propTypes = {
     url: PropTypes.string.isRequired,
     likes: PropTypes.number.isRequired,
   }).isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
-  showRemove: PropTypes.bool.isRequired,
 }
 
 export default Blog

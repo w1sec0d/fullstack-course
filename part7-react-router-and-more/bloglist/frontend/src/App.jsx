@@ -14,6 +14,7 @@ import { getUserFromLocalStorage } from './utils/localStorage'
 import { setUser } from './state/userSlice'
 import UserlistPage from './components/pages/UserlistPage'
 import UserPage from './components/pages/UserPage'
+import BlogPage from './components/pages/BlogPage'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -38,6 +39,7 @@ const App = () => {
           />
           <Route path="/users" element={<UserlistPage />} />
           <Route path="/users/:id" element={<UserPage />} />
+          <Route path="/blogs/:id" element={<BlogPage />} />
         </Routes>
       </div>
     </Router>

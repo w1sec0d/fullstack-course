@@ -12,9 +12,14 @@ const getBlogs = async () => {
   return response.data
 }
 
+const getBlog = async ({blogId}) => {
+  const urlEnd = `/${String(blogId)}`
+  const response = await axios.get(baseUrl + urlEnd)
+  return response.data
+}
+
 const getBlogsPerUser = async ({userId}) => {
   const urlEnd = userId ? `/${String(userId)}`:""
-  
   const response = await axios.get(baseUrl + '/blogsPerUser' + urlEnd)
   return response.data
 }
@@ -45,4 +50,4 @@ const removeBlog = async (id) => {
   return request.data
 }
 
-export default { getBlogs, getBlogsPerUser, setToken, createBlog, updateBlog, removeBlog }
+export default { getBlogs, getBlog, getBlogsPerUser, setToken, createBlog, updateBlog, removeBlog }

@@ -4,7 +4,7 @@ import blogService from '../../services/blogs'
 
 const UserPage = () => {
   const id = useParams().id
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsPerUser({ userId: id }),
   })
@@ -16,14 +16,17 @@ const UserPage = () => {
     return <p>An error ocurred! try again later</p>
   }
 
-  if (data) {
+  if (data && isSuccess) {
     return (
       <>
         <h2>Added blogs</h2>
         <ul>
-          {data.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
-          ))}
+          {data.map((blog) => {
+            if (!blog.id) {
+              return
+            }
+            return <li key={blog.id}>{blog.title}</li>
+          })}
         </ul>
       </>
     )
