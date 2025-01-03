@@ -2,16 +2,29 @@ const jwt = require('jsonwebtoken')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const middleware = require('../utils/middleware')
+const User = require('../models/user')
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   return response.json(blogs)
 })
 
+// Create a route to get number of blogs from each user
+blogRouter.get('/blogsPerUser', async (request, response) => {
+  const users = await User.find({})
+  const blogsPerUser = {}
+  users.forEach((user) => {
+    let userBlogs = user.blogs
+    blogsPerUser[user.name] = userBlogs.length
+  })
+  return response.json(blogsPerUser)
+})
+
 blogRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
   return response.json(blog)
 })
+
 
 blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   if (!request.user) {

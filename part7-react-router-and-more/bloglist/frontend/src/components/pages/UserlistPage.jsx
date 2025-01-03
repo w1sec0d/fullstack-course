@@ -1,7 +1,5 @@
 const UserlistPage = () => {
-  return (
-    <div>UserlistPage</div>
-  )
+  return <div></div>
 }
 
 export default UserlistPage

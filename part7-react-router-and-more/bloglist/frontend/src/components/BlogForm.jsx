@@ -1,50 +1,58 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
-import { setNotification } from '../state/NotificationSlice'
 import { useDispatch } from 'react-redux'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import blogService from '../services/blogs'
+import { setNotification } from '../state/notificationSlice'
 import { addBlog } from '../state/blogSlice'
 
-const BlogForm = ({ creationHandler, user }) => {
-  // Blog form state is only used in this component
+const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
 
-  const handleCreation = async (event) => {
-    event.preventDefault()
-    const request = await blogService.createBlog({ title, author, url })
-    const userId = request.user
-    let newRequest = { ...request }
+  const createBlogMutation = useMutation({
+    mutationFn: blogService.createBlog,
+    onSuccess: (data) => {
+      // Invalidate the blogs query to refetch the updated list of blogs
+      queryClient.invalidateQueries('blogs')
 
-    // Adds user info to locally added blog
-    newRequest.user = {
-      id: userId,
-      username: user.username,
-      name: user.name,
-    }
+      // Dispatch the action to update the local state
+      dispatch(addBlog(data))
 
-    if (request) {
-      dispatch(addBlog(newRequest))
+      // Clear the form fields
       setTitle('')
       setAuthor('')
       setUrl('')
+
+      // Dispatch a success notification
       dispatch(
         setNotification({
-          title: "Blog created successfully!",
-          timer: 1000
+          title: 'Blog created successfully!',
+          timer: 1000,
         })
       )
-    }
+    },
+    onError: (error) => {
+      // Dispatch an error notification
+      dispatch(
+        setNotification({
+          title: 'Error creating blog',
+          message: error.message,
+          timer: 1000,
+        })
+      )
+    },
+  })
+
+  const handleCreation = async (event) => {
+    event.preventDefault()
+    createBlogMutation.mutate({ title, author, url })
   }
 
   return (
-    <form
-      onSubmit={
-        creationHandler ? creationHandler(title, author, url) : handleCreation
-      }
-    >
+    <form onSubmit={handleCreation}>
       <div>
         <label htmlFor="title">Title</label>
         <input
@@ -81,13 +89,6 @@ const BlogForm = ({ creationHandler, user }) => {
       <button type="submit">Save</button>
     </form>
   )
-}
-BlogForm.propTypes = {
-  creationHandler: PropTypes.func,
-  user: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
 }
 
 export default BlogForm

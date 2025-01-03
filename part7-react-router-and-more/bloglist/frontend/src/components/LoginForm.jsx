@@ -3,7 +3,7 @@ import login from '../services/login'
 import blogService from '../services/blogs'
 
 import { useDispatch } from 'react-redux'
-import { setNotification } from '../state/NotificationSlice'
+import { setNotification } from '../state/notificationSlice'
 import { setUser } from '../state/userSlice'
 
 import { useNavigate } from 'react-router-dom'
@@ -23,19 +23,23 @@ const LoginForm = () => {
         await blogService.setToken(response.token)
         setUsername('')
         setPassword('')
-        dispatch(setUser(response))        
-        dispatch(setNotification({
-          title: 'Logged in successfully',
-        }))
+        dispatch(setUser(response))
+        dispatch(
+          setNotification({
+            title: 'Logged in successfully',
+          })
+        )
         navigate('/')
       }
     } catch (error) {
       console.error('Login failed', error)
-      dispatch(setNotification({
-        title: 'Login failed',
-        text: 'Wrong username/password or no service at the moment. Please try again',
-        icon: 'error',
-      }))
+      dispatch(
+        setNotification({
+          title: 'Login failed',
+          text: 'Wrong username/password or no service at the moment. Please try again',
+          icon: 'error',
+        })
+      )
     }
   }
   return (

@@ -7,11 +7,22 @@ import {
 
 import BloglistPage from './components/pages/BloglistPage'
 import LoginPage from './components/pages/LoginPage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Navbar from './components/pages/Navbar'
+import { useEffect } from 'react'
+import { getUserFromLocalStorage } from './utils/localStorage'
+import { setUser } from './state/userSlice'
 
 const App = () => {
   const user = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const localStorageUser = getUserFromLocalStorage()
+    if (localStorageUser) {
+      dispatch(setUser(localStorageUser))
+    }
+  }, [dispatch])
 
   return (
     <Router>

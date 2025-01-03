@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 // Routing
 import { useNavigate } from 'react-router-dom'
@@ -15,13 +15,13 @@ import ConfirmationDialog from '../ConfirmationDialog'
 import blogService from '../../services/blogs'
 
 // State Logic
-import { setNotification, setConfirmation } from '../../state/NotificationSlice'
+import { setNotification, setConfirmation } from '../../state/notificationSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
-// Sorting logic 
+// Sorting logic
 import { sortBlogsByLikes } from '../../utils/blogSorting'
 import { setBlogs } from '../../state/blogSlice'
-import { clearUser, setUser } from '../../state/userSlice'
+import { setUser } from '../../state/userSlice'
 
 const BloglistPage = () => {
   const [confirmationCallback, setConfirmationCallback] = useState(null)
@@ -34,8 +34,10 @@ const BloglistPage = () => {
     data: blogs,
     isLoading,
     isError,
-  } = useQuery('blogs', blogService.getBlogs, {
-    onSuccess: (data) => {      
+  } = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getBlogs,
+    onSuccess: (data) => {
       const sortedBlogs = sortBlogsByLikes(data)
       dispatch(setBlogs(sortedBlogs))
     },
@@ -49,7 +51,8 @@ const BloglistPage = () => {
     },
   })
 
-  const likeMutation = useMutation(blogService.updateBlog, {
+  const likeMutation = useMutation({
+    mutationFn: blogService.updateBlog,
     onSuccess: () => {
       queryClient.invalidateQueries('blogs')
       dispatch(
@@ -69,7 +72,8 @@ const BloglistPage = () => {
     },
   })
 
-  const removeMutation = useMutation(blogService.removeBlog, {
+  const removeMutation = useMutation({
+    mutationFn: blogService.removeBlog,
     onSuccess: () => {
       queryClient.invalidateQueries('blogs')
       dispatch(
@@ -136,7 +140,7 @@ const BloglistPage = () => {
     return <div>Error loading blogs</div>
   }
 
-  if(!user){
+  if (!user) {
     navigate('/')
   }
 

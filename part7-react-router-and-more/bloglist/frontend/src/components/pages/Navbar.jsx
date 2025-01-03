@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { clearUser } from '../../state/userSlice'
-import { setNotification } from '../../state/NotificationSlice'
+import { setNotification } from '../../state/notificationSlice'
 
 const Navbar = () => {
   const user = useSelector((state) => state.user)
