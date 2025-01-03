@@ -12,10 +12,16 @@ blogRouter.get('/', async (request, response) => {
 // Create a route to get number of blogs from each user
 blogRouter.get('/blogsPerUser', async (request, response) => {
   const users = await User.find({})
-  const blogsPerUser = {}
+  const blogsPerUser = []
   users.forEach((user) => {
     let userBlogs = user.blogs
-    blogsPerUser[user.name] = userBlogs.length
+    blogsPerUser.push(
+      {
+        userId: user.id,
+        name: user.name,
+        blogs: userBlogs.length
+      }
+    )
   })
   return response.json(blogsPerUser)
 })

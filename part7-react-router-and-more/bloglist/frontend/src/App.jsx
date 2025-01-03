@@ -12,6 +12,7 @@ import Navbar from './components/pages/Navbar'
 import { useEffect } from 'react'
 import { getUserFromLocalStorage } from './utils/localStorage'
 import { setUser } from './state/userSlice'
+import UserlistPage from './components/pages/UserlistPage'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -34,6 +35,7 @@ const App = () => {
             path="/"
             element={user ? <BloglistPage /> : <Navigate replace to="/login" />}
           />
+          <Route path="/users" element={<UserlistPage />} />
         </Routes>
       </div>
     </Router>
