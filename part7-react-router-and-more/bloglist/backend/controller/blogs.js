@@ -11,20 +11,26 @@ blogRouter.get('/', async (request, response) => {
 
 // Create a route to get number of blogs from each user
 blogRouter.get('/blogsPerUser', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs', { title:1,author:1,url:1,likes:1 })
   const blogsPerUser = []
   users.forEach((user) => {
-    let userBlogs = user.blogs
     blogsPerUser.push(
       {
         userId: user.id,
         name: user.name,
-        blogs: userBlogs.length
+        blogs: user.blogs
       }
     )
   })
   return response.json(blogsPerUser)
 })
+
+// Create a route to get number of blogs from each user
+blogRouter.get('/blogsPerUser/:id', async (request, response) => {
+  const user = await User.findById(request.params.id).populate('blogs', { title:1,author:1,url:1,likes:1 })
+  return response.json(user.blogs)
+})
+
 
 blogRouter.get('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)

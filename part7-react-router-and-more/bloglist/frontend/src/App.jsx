@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { getUserFromLocalStorage } from './utils/localStorage'
 import { setUser } from './state/userSlice'
 import UserlistPage from './components/pages/UserlistPage'
+import UserPage from './components/pages/UserPage'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -36,6 +37,7 @@ const App = () => {
             element={user ? <BloglistPage /> : <Navigate replace to="/login" />}
           />
           <Route path="/users" element={<UserlistPage />} />
+          <Route path="/users/:id" element={<UserPage />} />
         </Routes>
       </div>
     </Router>

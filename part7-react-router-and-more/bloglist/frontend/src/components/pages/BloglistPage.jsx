@@ -158,7 +158,7 @@ const BloglistPage = () => {
           if (blog.user) {
             removeButtonShown = blog.user.username === user.username
           }
-
+          if (!blog.id) return
           return (
             <Blog
               value={blog}

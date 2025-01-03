@@ -12,8 +12,10 @@ const getBlogs = async () => {
   return response.data
 }
 
-const getBlogsPerUser = async () => {
-  const response = await axios.get(baseUrl + '/blogsPerUser')
+const getBlogsPerUser = async ({userId}) => {
+  const urlEnd = userId ? `/${String(userId)}`:""
+  
+  const response = await axios.get(baseUrl + '/blogsPerUser' + urlEnd)
   return response.data
 }
 
