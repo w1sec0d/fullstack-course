@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import blogService from '../../services/blogs'
 import { useDispatch } from 'react-redux'
 import { setConfirmation, setNotification } from '../../state/notificationSlice'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ConfirmationDialog from '../ConfirmationDialog'
 import ToastNotification from '../ToastNotification'
+import CommentForm from '../CommentForm'
+import { setUser } from '../../state/userSlice'
 
 const BlogPage = () => {
   const [confirmationCallback, setConfirmationCallback] = useState(null)
@@ -18,6 +20,15 @@ const BlogPage = () => {
   const queryClient = useQueryClient()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const savedUser = window.localStorage.getItem('bloglistAppUser')
+    if (savedUser) {
+      const user = JSON.parse(savedUser)
+      dispatch(setUser(user))
+      blogService.setToken(user.token)
+    }
+  }, [dispatch])
 
   const likeMutation = useMutation({
     mutationFn: blogService.updateBlog,
@@ -112,6 +123,7 @@ const BlogPage = () => {
         <button onClick={handleLike}>Like</button>
         <button onClick={handleRemove}>Remove</button>
         <h2>Comments</h2>
+        <CommentForm />
         <ul>
           {data.comments.length >= 1 ? (
             data.comments.map((comment, index) => (

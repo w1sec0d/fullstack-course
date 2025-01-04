@@ -16,7 +16,6 @@ const favoriteBlog = (blogs) => {
     },
     { likes: -Infinity }
   )
-  console.log(result)
   return { title: result.title, author: result.author, likes: result.likes }
 }
 

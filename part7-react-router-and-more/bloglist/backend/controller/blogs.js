@@ -64,14 +64,18 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   return response.status(201).json(result)
 })
 
-
+// Create a route to add comments to a blog
 blogRouter.post('/:id/comments', middleware.userExtractor, async (request, response) => {
   if (!request.user) {
     return response.status(401).json({ error: 'No token authorization given!' })
   }
 
+  const blogId = request.params.id
   const body = request.body
 
+  const commentRequest = await Blog.findByIdAndUpdate(blogId, { $push: { comments: body.comment } }, { new: true })
+
+  return response.status(201).json(commentRequest)
 })
 
 
