@@ -64,6 +64,17 @@ blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   return response.status(201).json(result)
 })
 
+
+blogRouter.post('/:id/comments', middleware.userExtractor, async (request, response) => {
+  if (!request.user) {
+    return response.status(401).json({ error: 'No token authorization given!' })
+  }
+
+  const body = request.body
+
+})
+
+
 blogRouter.delete(
   '/:id',
   middleware.userExtractor,

@@ -111,6 +111,16 @@ const BlogPage = () => {
         <p>Added by {data.author}</p>
         <button onClick={handleLike}>Like</button>
         <button onClick={handleRemove}>Remove</button>
+        <h2>Comments</h2>
+        <ul>
+          {data.comments.length >= 1 ? (
+            data.comments.map((comment, index) => (
+              <li key={index}>{comment}</li>
+            ))
+          ) : (
+            <p>No comments yet</p>
+          )}
+        </ul>
         <ConfirmationDialog onConfirm={confirmationCallback} />
         <ToastNotification />
       </div>
