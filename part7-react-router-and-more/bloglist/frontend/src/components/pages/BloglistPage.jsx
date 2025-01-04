@@ -71,7 +71,7 @@ const BloglistPage = () => {
 
   if (blogs) {
     return (
-      <>
+      <div>
         <ToastNotification />
         <div>
           <Togglable buttonLabel="New Blog">
@@ -89,7 +89,7 @@ const BloglistPage = () => {
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }
