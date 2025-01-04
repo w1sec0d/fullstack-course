@@ -54,8 +54,11 @@ const CommentForm = () => {
           required={true}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
+          className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
-        <button>Add Comment</button>
+        <button className="ml-2 bg-accent2 text-black px-2 py-1 rounded hover:pointer">
+          Add Comment
+        </button>
       </div>
     </form>
   )

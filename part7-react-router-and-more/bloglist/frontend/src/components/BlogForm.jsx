@@ -53,8 +53,10 @@ const BlogForm = () => {
 
   return (
     <form onSubmit={handleCreation}>
-      <div>
-        <label htmlFor="title">Title</label>
+      <div className="mb-3">
+        <label htmlFor="title" className="mr-3">
+          Title
+        </label>
         <input
           type="text"
           name="title"
@@ -62,10 +64,13 @@ const BlogForm = () => {
           autoComplete="title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
+          className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
-      <div>
-        <label htmlFor="author">Author</label>
+      <div className="mb-3">
+        <label htmlFor="author" className="mr-3">
+          Author
+        </label>
         <input
           type="text"
           name="author"
@@ -73,10 +78,13 @@ const BlogForm = () => {
           autoComplete="author"
           value={author}
           onChange={(event) => setAuthor(event.target.value)}
+          className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
-      <div>
-        <label htmlFor="url">Url</label>
+      <div className="mb-3">
+        <label htmlFor="url" className="mr-3">
+          Url
+        </label>
         <input
           type="text"
           name="url"
@@ -84,9 +92,15 @@ const BlogForm = () => {
           autoComplete="url"
           value={url}
           onChange={(event) => setUrl(event.target.value)}
+          className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
-      <button type="submit">Save</button>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Save 💾
+      </button>
     </form>
   )
 }

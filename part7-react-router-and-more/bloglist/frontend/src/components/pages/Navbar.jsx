@@ -22,11 +22,18 @@ const Navbar = () => {
   if (!user) {
     return (
       <>
-        <h2>Blogs</h2>
-        <nav>
-          <ul>
+        <nav className="bg-gray-800 p-4 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-white w-full py-4">
+            Blogs App 📝
+          </h2>
+          <ul className="flex space-x-4">
             <li>
-              <Link to="/login">Login</Link>
+              <Link
+                to="/login"
+                className="text-accent2 hover:text-accent-hover font-bold"
+              >
+                Login
+              </Link>
             </li>
           </ul>
         </nav>
@@ -35,35 +42,32 @@ const Navbar = () => {
   }
   return (
     <>
-      <h2>Blogs</h2>
-      <div
-        style={{
-          background: 'lightgray',
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className="bg-gray-800 p-4 flex justify-between items-center">
         <nav>
-          <ul
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              flexDirection: 'row',
-              gap: '20px',
-              listStyleType: 'none',
-            }}
-          >
+          <h2 className="text-2xl font-bold text-white w-full py-4">
+            Blogs App 📝
+          </h2>
+          <ul className="flex space-x-4">
             <li>
-              <Link to="/">Blogs</Link>
+              <Link to="/" className="text-blue-400">
+                Blogs
+              </Link>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <Link to="/users" className="text-blue-400">
+                Users
+              </Link>
             </li>
           </ul>
         </nav>
-        <p style={{ marginLeft: '20px' }}>
+        <p className="text-white">
           Welcome <b>{user.username}</b>{' '}
-          <button onClick={handleLogOut}>Log Out</button>
+          <button
+            onClick={handleLogOut}
+            className="ml-4 bg-red-500 text-white px-2 py-1 rounded"
+          >
+            Log Out
+          </button>
         </p>
       </div>
     </>

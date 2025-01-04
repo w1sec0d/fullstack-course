@@ -29,18 +29,22 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <div className="bg-gray-900 min-h-screen text-white">
         <Navbar />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={user ? <BloglistPage /> : <Navigate replace to="/login" />}
-          />
-          <Route path="/users" element={<UserlistPage />} />
-          <Route path="/users/:id" element={<UserPage />} />
-          <Route path="/blogs/:id" element={<BlogPage />} />
-        </Routes>
+        <div className="container mx-auto p-4">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/"
+              element={
+                user ? <BloglistPage /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route path="/users" element={<UserlistPage />} />
+            <Route path="/users/:id" element={<UserPage />} />
+            <Route path="/blogs/:id" element={<BlogPage />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   )

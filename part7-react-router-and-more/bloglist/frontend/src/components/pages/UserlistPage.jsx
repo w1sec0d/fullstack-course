@@ -9,21 +9,23 @@ const UserlistPage = () => {
   })
 
   if (isLoading) {
-    return <p>Loading Users info...</p>
+    return <p className="text-white">Loading Users info...</p>
   }
   if (isError) {
-    return <p>An error ocurred! try again later</p>
+    return <p className="text-red-500">An error occurred! Try again later</p>
   }
 
   if (data) {
     return (
-      <div>
-        <h2>Users</h2>
-        <table>
+      <div className="text-white">
+        <h2 className="text-2xl font-bold mb-4">Users</h2>
+        <table className="min-w-full bg-gray-800">
           <thead>
             <tr>
-              <th></th>
-              <th>Blogs Created</th>
+              <th className="py-2 px-4 border-b border-gray-700">Name</th>
+              <th className="py-2 px-4 border-b border-gray-700">
+                Blogs Created
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -31,10 +33,14 @@ const UserlistPage = () => {
               if (!row.userId) return
               return (
                 <tr key={row.userId}>
-                  <td>
-                    <Link to={`/users/${row.userId}`}>{row.name} </Link>
+                  <td className="py-2 px-4 border-b border-gray-700">
+                    <Link to={`/users/${row.userId}`} className="text-blue-400">
+                      {row.name}
+                    </Link>
                   </td>
-                  <td>{row.blogs.length}</td>
+                  <td className="py-2 px-4 border-b border-gray-700">
+                    {row.blogs.length}
+                  </td>
                 </tr>
               )
             })}

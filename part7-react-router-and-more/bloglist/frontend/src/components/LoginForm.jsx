@@ -43,11 +43,13 @@ const LoginForm = () => {
     }
   }
   return (
-    <>
+    <div className="bg-secondary rounded-md p-4 text-center">
       <h2>Log-in to application</h2>
       <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username</label>
+        <div className="my-4 flex-row gap-2">
+          <label htmlFor="username" className="mr-2">
+            Username
+          </label>
           <input
             type="text"
             name="username"
@@ -55,10 +57,13 @@ const LoginForm = () => {
             autoComplete="username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
+            className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
-        <div>
-          <label htmlFor="password">Password</label>
+        <div className="my-4 flex-row gap-2">
+          <label htmlFor="password" className="mr-2">
+            Password
+          </label>
           <input
             type="password"
             name="password"
@@ -66,11 +71,17 @@ const LoginForm = () => {
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            className="text-black px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
-        <button type="submit">Log In</button>
+        <button
+          type="submit"
+          className="bg-accent2 text-black px-2 py-1 rounded hover:pointer"
+        >
+          Log In
+        </button>
       </form>
-    </>
+    </div>
   )
 }
 

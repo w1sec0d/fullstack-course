@@ -58,11 +58,11 @@ const BloglistPage = () => {
   }, [dispatch])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className="text-white">Loading...</div>
   }
 
   if (isError) {
-    return <div>Error loading blogs</div>
+    return <div className="text-red-500">Error loading blogs</div>
   }
 
   if (!user) {
@@ -71,7 +71,7 @@ const BloglistPage = () => {
 
   if (blogs) {
     return (
-      <div>
+      <div className="text-white">
         <ToastNotification />
         <div>
           <Togglable buttonLabel="New Blog">

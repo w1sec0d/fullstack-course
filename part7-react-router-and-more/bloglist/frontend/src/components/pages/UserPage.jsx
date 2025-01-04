@@ -10,17 +10,17 @@ const UserPage = () => {
   })
 
   if (isLoading) {
-    return <p>Loading User info...</p>
+    return <p className="text-white">Loading User info...</p>
   }
   if (isError) {
-    return <p>An error ocurred! try again later</p>
+    return <p className="text-red-500">An error occurred! Try again later</p>
   }
 
   if (data && isSuccess) {
     return (
-      <>
-        <h2>Added blogs</h2>
-        <ul>
+      <div className="text-white">
+        <h2 className="text-2xl font-bold mb-4">Added blogs</h2>
+        <ul className="list-disc list-inside">
           {data.map((blog) => {
             if (!blog.id) {
               return
@@ -28,7 +28,7 @@ const UserPage = () => {
             return <li key={blog.id}>{blog.title}</li>
           })}
         </ul>
-      </>
+      </div>
     )
   }
 }

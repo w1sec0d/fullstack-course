@@ -105,26 +105,41 @@ const BlogPage = () => {
   }
 
   if (isLoading) {
-    return <p>Loading Blog info...</p>
+    return <p className="text-white">Loading Blog info...</p>
   }
   if (isError) {
-    return <p>An error ocurred! try again later</p>
+    return <p className="text-red-500">An error occurred! Try again later</p>
   }
 
   if (data) {
     return (
-      <div>
-        <h2>{data.title}</h2>
-        <a href={data.url} target="_BLANK" rel="noopener noreferrer">
+      <div className="text-white">
+        <h2 className="text-3xl font-bold mb-4">{data.title}</h2>
+        <a
+          href={data.url}
+          target="_BLANK"
+          rel="noopener noreferrer"
+          className="text-blue-400"
+        >
           {data.url}
         </a>
-        <p>{data.likes} likes</p>
-        <p>Added by {data.author}</p>
-        <button onClick={handleLike}>Like</button>
-        <button onClick={handleRemove}>Remove</button>
-        <h2>Comments</h2>
+        <p className="mt-2">{data.likes} likes</p>
+        <p className="mt-2">Added by {data.author}</p>
+        <button
+          onClick={handleLike}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Like
+        </button>
+        <button
+          onClick={handleRemove}
+          className="mt-4 ml-2 bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Remove
+        </button>
+        <h2 className="text-2xl font-bold mt-8">Comments</h2>
         <CommentForm />
-        <ul>
+        <ul className="list-disc list-inside mt-4">
           {data.comments.length >= 1 ? (
             data.comments.map((comment, index) => (
               <li key={index}>{comment}</li>
