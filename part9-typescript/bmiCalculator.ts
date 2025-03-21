@@ -1,4 +1,11 @@
 const calculateBMI = (height: number, mass: number): string => {
+  if (height <= 0) {
+    throw new Error('Heigth must be greater than 0');
+  }
+  if (mass <= 0) {
+    throw new Error('Mass must be greater than 0');
+  }
+
   // Calculates bmi with mass in kg and height in cm
   const bmi = mass / (height / 100) ** 2;
   let resultString = '';
@@ -17,4 +24,10 @@ const calculateBMI = (height: number, mass: number): string => {
   return resultString;
 };
 
-console.log(calculateBMI(180, 74));
+try {
+  console.log(calculateBMI(180, 74));
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error('Error:', error);
+  }
+}
