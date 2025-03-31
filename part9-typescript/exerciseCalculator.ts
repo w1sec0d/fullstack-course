@@ -15,6 +15,20 @@ interface exerciseInfo {
   average: number;
 }
 
+interface exerciseValues {
+  target: number;
+  exerciseHours: number[];
+}
+
+const parseArguments = (args: Array<number | string>): exerciseValues => {
+  if (args.length < 4)
+    throw new Error('Not Enough Arguments, expected at least 4');
+  return {
+    target: Number(args[2]),
+    exerciseHours: args.slice(3).map((hour) => Number(hour)),
+  };
+};
+
 const rateExerciseHours = (target: number, current: number): number => {
   let difference = Math.abs(target - current);
   if (difference === 0) {
@@ -62,7 +76,10 @@ const calculateExercise = (
 };
 
 try {
-  console.log(calculateExercise([3, 0, 2, 4.5, 0, 3, 1], 2));
+  const { target, exerciseHours } = parseArguments(process.argv);
+  console.log('exerciseHours', exerciseHours);
+
+  console.log(calculateExercise(exerciseHours, target));
 } catch (error: unknown) {
   if (error instanceof Error) {
     console.error('Error:', error);
