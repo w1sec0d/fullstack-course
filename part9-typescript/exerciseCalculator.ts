@@ -20,7 +20,9 @@ interface exerciseValues {
   exerciseHours: number[];
 }
 
-const parseArguments = (args: Array<number | string>): exerciseValues => {
+const parseExerciseArguments = (
+  args: Array<number | string>
+): exerciseValues => {
   if (args.length < 4)
     throw new Error('Not Enough Arguments, expected at least 4');
   return {
@@ -76,7 +78,7 @@ const calculateExercise = (
 };
 
 try {
-  const { target, exerciseHours } = parseArguments(process.argv);
+  const { target, exerciseHours } = parseExerciseArguments(process.argv);
   console.log('exerciseHours', exerciseHours);
 
   console.log(calculateExercise(exerciseHours, target));
