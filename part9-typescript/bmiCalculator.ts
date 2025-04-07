@@ -41,11 +41,15 @@ const calculateBMI = (height: number, mass: number): string => {
   return resultString;
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBMI(height, weight));
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.error('Error:', error);
+if (require.main === module) {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBMI(height, weight));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error:', error.message);
+    }
   }
 }
+
+export default calculateBMI;
