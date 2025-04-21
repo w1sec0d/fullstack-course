@@ -32,7 +32,7 @@ const parseExerciseArguments = (
 };
 
 const rateExerciseHours = (target: number, current: number): number => {
-  let difference = Math.abs(target - current);
+  const difference = Math.abs(target - current);
   if (difference === 0) {
     return 3;
   } else if (difference > 4) {
@@ -59,7 +59,7 @@ const calculateExercise = (
   if (exerciseHours.length === 0) {
     throw new Error('Invalid or empty array');
   }
-  let averageHours =
+  const averageHours =
     exerciseHours.reduce((sum, value) => sum + value, 0) / exerciseHours.length;
   return {
     periodLength: exerciseHours.length,
